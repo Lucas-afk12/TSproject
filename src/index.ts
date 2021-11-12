@@ -5,7 +5,7 @@ import { db } from './database/database';
 import { Plantas } from './model/productos';
 
 export const main = async () => {
-	const user_conected: tCliente | boolean = await ClientFunc.conected();
+	const user_conected: tCliente | boolean = await ClientFunc.conected().catch()
 	if (user_conected != false) {
 		await klk(user_conected);
 	} else {

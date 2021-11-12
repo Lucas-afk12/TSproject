@@ -4,6 +4,7 @@ import { leerTeclado } from './vistas/lecturaTeclado';
 import { db } from './database/database';
 import { main } from './index'
 export const userMenu = async () => {
+	console.clear()
 	
 		let n = await menuLogin();
 
@@ -46,14 +47,7 @@ const UserCreator = async (Errores?: string[]) => {
 	);
 	let status = false;
 	let reciboChek = false;
-
-	if (
-		nombre !== '' &&
-		apellidos !== '' &&
-		dni !== '' &&
-		contraseña !== '' &&
-		recibo !== ''
-	) {
+{
 		if (recibo == 's') {
 			reciboChek = true;
 		}
@@ -71,26 +65,21 @@ const UserCreator = async (Errores?: string[]) => {
 				status
 			);
 
-			const user_exist: boolean = await cliente.Exist(cliente.username)
-			if (user_exist == false) {
+			let errors : string[] = await cliente.errorchecker();
+			if (errors.length === 0 ){
 				let saver = new clientModel(cliente);
 				await saver.save(),
-					(err: string) => {
+					(err: any) => {
 						errorsend.push('Ha ocurrido un error guardando el cliente');
-						userLogin(errorsend);
 					};
-				await userMenu();
-			} else {
-				errorsend.push('ese nombre de usuario ya existe');
-				await UserCreator(errorsend);
+			}else{
+				errorsend = errors
+				await UserCreator(errorsend)
+
 			}
-			UserCreator();
-		} catch (err) {
+		}catch (err) {
 			errorsend.push('Ha ocurrido un error inesperado');
-		}
-	} else {
-		errorsend.push('No puedes dejar ningun elemento sin rellenar');
-		await UserCreator(errorsend);
+		} 
 	}
 };
 

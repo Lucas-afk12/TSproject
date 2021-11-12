@@ -50,6 +50,10 @@ export class Cliente {
 		return this._nombreUsuario;
 	}
 
+
+	//funciones de datos.
+
+	//funciones tecnicas.
 	creator(
 		_nombre: string,
 		_apellido: string,
@@ -116,6 +120,27 @@ export class Cliente {
 			}
 		});
 		return promise;
+	}
+
+	errorchecker(){
+		let solution :Array<string> = [] 
+		let x = this._nombre
+		const promise = new Promise<Array<string>>(async (resolve, reject) => {
+		if (
+			this._nombre == '' &&
+			this._apellidos == '' &&
+			this._dni == '' &&
+			this._Contraseña == ''
+		){
+			solution.push('No puedes dejar ningun elemento vacio');
+		}
+		if (await this.Exist()){
+			solution.push('Ese nombre de usuario ya existe')
+		}
+
+		resolve(solution)
+	})
+	return promise
 	}
 }
 
