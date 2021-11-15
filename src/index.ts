@@ -91,7 +91,6 @@ const options = async () => {
         }
         console.log("lista de plantas:");
         console.log("\n")
-        plantas.sort((a,b) => (a._precio > b._precio) ? 1 : ((b._precio > a._precio) ? -1 : 0))
         for (let planta of plantas) {
           console.log(
             `${planta.id}.-${planta.NombreProducto} , precioG= ${planta._precio}€ , stock= ${planta._stock} , genetica= ${planta.tipo} , ${planta.Predominancia} `

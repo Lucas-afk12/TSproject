@@ -134,7 +134,6 @@ var options = function () { return __awaiter(void 0, void 0, void 0, function ()
                                 }
                                 console.log("lista de plantas:");
                                 console.log("\n");
-                                plantas.sort(function (a, b) { return (a._precio > b._precio) ? 1 : ((b._precio > a._precio) ? -1 : 0); });
                                 for (_a = 0, plantas_1 = plantas; _a < plantas_1.length; _a++) {
                                     planta = plantas_1[_a];
                                     console.log(planta.id + ".-" + planta.NombreProducto + " , precioG= " + planta._precio + "\u20AC , stock= " + planta._stock + " , genetica= " + planta.tipo + " , " + planta.Predominancia + " ");
