@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 class DataBase {
 
-    private _cadenaConexion = 'mongodb+srv://Lucas:Salmeron@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+    private _cadenaConexion = 'mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
     constructor(){}
     set cadenaConexion(_cadenaConexion: string){
         this._cadenaConexion = _cadenaConexion

@@ -1,7 +1,7 @@
 import { Schema, model, createConnection } from 'mongoose';
 const autoIncrement = require('mongoose-auto-increment');
-export const connection = createConnection(
-	'mongodb+srv://Lucas:Salmeron@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const connection = createConnection(
+	'mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 );
 
 //Clase cliente con sus funcionalidades
@@ -50,6 +50,10 @@ export class Cliente {
 		return this._nombreUsuario;
 	}
 
+
+	//funciones de datos. 
+
+	//funciones tecnicas.
 	creator(
 		_nombre: string,
 		_apellido: string,
@@ -117,6 +121,23 @@ export class Cliente {
 		});
 		return promise;
 	}
+
+	errorchecker(){
+		let solution :Array<string> = [] 
+		let x = this._nombre
+		const promise = new Promise<Array<string>>(async (resolve, reject) => {
+		if (
+			this._nombreUsuario || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == ''
+			){
+			solution.push('No puedes dejar ningun elemento vacio');
+		}
+		if (await this.Exist()){
+			solution.push('Ese nombre de usuario ya existe')
+		}
+		resolve(solution)
+	})
+	return promise
+	}
 }
 
 //inizializamos una variable para ejecutar las funciones de administracion de los clientes.
@@ -129,7 +150,7 @@ export interface tCliente {
 	_apellidos: string;
 	_dni: string;
 	_nombreUsuario: string;
-	_Contraseña: string;
+	_Contraseña: string;	
 	_pedidos: number[];
 	_gramos: number[];
 	_recibo: boolean;

@@ -1,6 +1,8 @@
-import { Schema } from "mongoose";
+import { Schema , createConnection} from "mongoose";
 const autoIncrement = require('mongoose-auto-increment');
-import { connection } from "./clientes";
+const connection = createConnection(
+	'mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+);
 
 //Productos 
 
@@ -50,20 +52,33 @@ interface Genetica {
 
     
 const PlantaSchema = new Schema({
-	_nombre: { type: String, unique: true },
-	_apellidos: { type: String },
-	_dni: { type: String },
-	_nombreUsuario: { type: String },
-	_Contraseña: { type: String },
-	_pedidos: { type: Array },
-	_gramos: { type: Array },
-	_recibo: { type: Boolean },
-	_status: { type: Boolean },
-    type: {value:"p"}
+    planta: { type:String },
+	precio: { type: Number },
+	thc: { type: Number },
+	cbd: { type: String },
+	cosecha: { type: Date },
+	stock: { type: Boolean },
+	cod_proveedor: { type: Number },
+	genetica: { type: Object },
+	humedad: { type: Number },
+    apta_para_extracto: { type: Boolean },
+	id_p: { type: Number },
+    type: {type:String}
+
 })
+autoIncrement.initialize(connection);
 
 PlantaSchema.plugin(autoIncrement.plugin, 'Plantas');
-export const clientModel: Plantas | any = connection.model<Plantas>(
+
+export const plantModel: Plantas | any = connection.model<Plantas>(
 	'productos',
 	PlantaSchema
 );
+
+const aa = async() => {
+
+let hola = await  plantModel.find() 
+console.log(hola)
+}
+
+aa()
