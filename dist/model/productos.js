@@ -175,6 +175,7 @@ var genetica = {
     Predominancia: "",
 };
 exports.plantFunc = new Plantas("", 0, 0, "", false, 0, genetica, 0, false, new Date());
+//subclase de extracto
 var Extracto = /** @class */ (function (_super) {
     __extends(Extracto, _super);
     function Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
@@ -195,7 +196,7 @@ var Extracto = /** @class */ (function (_super) {
     return Extracto;
 }(Productos));
 exports.Extracto = Extracto;
-//objeto vacio 
+//objeto vacio
 exports.ExtractFunc = new Extracto("", 0, 0, "", false, 0, new Date(), 0, false, "");
 //esquemas
 var PlantaSchema = new mongoose_1.Schema({
@@ -226,10 +227,10 @@ var Extractoschema = new mongoose_1.Schema({
     id_p: { type: Number },
     type: { type: String },
 });
-//plugin 
+//plugin
 autoIncrement.initialize(connection);
-PlantaSchema.plugin(autoIncrement.plugin, "Plantas");
-Extractoschema.plugin(autoIncrement.plugin, "Extracto");
+PlantaSchema.plugin(autoIncrement.plugin, { model: "Plantas", field: "id_p" });
+Extractoschema.plugin(autoIncrement.plugin, { model: "Extracto", field: "id_p" });
 //modelos
 exports.plantModel = connection.model("productos", PlantaSchema);
 exports.ExtractModel = connection.model("productos", PlantaSchema);

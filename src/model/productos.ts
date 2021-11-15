@@ -14,8 +14,8 @@ export class Productos {
   protected cbd: string;
   protected stock: boolean;
   protected cod_proveedor: number;
-  protected type?:string;
-  protected Cosecha: Date
+  protected type?: string;
+  protected Cosecha: Date;
 
   constructor(
     Nombre: string,
@@ -24,8 +24,8 @@ export class Productos {
     cbd: string,
     stock: boolean,
     cod_proveedor: number,
-    Cosecha:Date,
-    type?:string,
+    Cosecha: Date,
+    type?: string,
     id_p?: number
   ) {
     this.id_p = id_p;
@@ -35,28 +35,28 @@ export class Productos {
     this.cbd = cbd;
     this.stock = stock;
     this.cod_proveedor = cod_proveedor;
-    this.Cosecha = Cosecha
+    this.Cosecha = Cosecha;
     this.id_p = id_p;
-    this.type = type
+    this.type = type;
   }
   get NombreProducto() {
     return this.Nombre;
   }
 
-  get id(){
-      return this.id_p
+  get id() {
+    return this.id_p;
   }
 
-  get _precio(){
-      return this.precio
+  get _precio() {
+    return this.precio;
   }
 
   get _stock() {
-      return this.stock
+    return this.stock;
   }
 
-  get tipo(){
-      return this.type
+  get tipo() {
+    return this.type;
   }
 
   get_products() {
@@ -71,10 +71,10 @@ export class Productos {
     return promise;
   }
 
-  get cosecha(){
-      return this.Cosecha
+  get cosecha() {
+    return this.Cosecha;
   }
-} 
+}
 
 //subaclases de producto.
 
@@ -98,22 +98,22 @@ export class Plantas extends Productos {
     Genetica: Genetica,
     humedad: Number,
     Apta_para_extracto: boolean,
-    Cosecha : Date,
+    Cosecha: Date,
     id_p?: number,
-    type?:string,
+    type?: string
   ) {
-    super(Nombre, precio, thc, cbd, stock, cod_proveedor,Cosecha ,type ,id_p, );
+    super(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p);
     this.Genetica = Genetica;
     this.humedad = humedad;
     this.Apta_para_extracto = Apta_para_extracto;
   }
 
-  get tipo(){
-      return this.Genetica.tipo
+  get tipo() {
+    return this.Genetica.tipo;
   }
 
   get Predominancia() {
-      return this.Genetica.Predominancia
+    return this.Genetica.Predominancia;
   }
 
   creator(
@@ -128,8 +128,8 @@ export class Plantas extends Productos {
     apta_para_extracto: boolean,
     Cosecha: Date,
     id_p?: number,
-    type?:string
-  ):Plantas {
+    type?: string
+  ): Plantas {
     if (id_p == undefined) {
       return new Plantas(
         Nombre,
@@ -140,7 +140,7 @@ export class Plantas extends Productos {
         cod_proveedor,
         genetica,
         humedad,
-        apta_para_extracto, 
+        apta_para_extracto,
         Cosecha
       );
     } else {
@@ -160,58 +160,36 @@ export class Plantas extends Productos {
       );
     }
   }
-
 }
 
 // Objeto vacio para ejecutar funciones.
 
 const genetica: Genetica = {
-    tipo: "",
-    Predominancia: "",
-  };
-  
-  export const plantFunc = new Plantas(
-    "",
-    0,
-    0,
-    "",
-    false,
-    0,
-    genetica,
-    0,
-    false,
-    new Date()
-  );
-  
+  tipo: "",
+  Predominancia: "",
+};
 
+export const plantFunc = new Plantas(
+  "",
+  0,
+  0,
+  "",
+  false,
+  0,
+  genetica,
+  0,
+  false,
+  new Date()
+);
+
+//subclase de extracto
 
 export class Extracto extends Productos {
+  N_Apaleo: number;
+  mutable: boolean;
+  variedad: string;
 
-    N_Apaleo : number;
-    mutable : boolean;
-    variedad : string;
-
-    constructor(
-      Nombre: string,
-      precio: number,
-      thc: number,
-      cbd: string,
-      stock: boolean,
-      cod_proveedor: number,
-      Cosecha: Date,
-      N_apaleo : number,
-      mutable: boolean,
-      variedad: string,
-      id_p?: number,
-      type?:string,
-    ) {
-      super(Nombre, precio, thc, cbd, stock, cod_proveedor,Cosecha,type ,id_p );
-      this.N_Apaleo = N_apaleo;
-      this.mutable = mutable;
-      this.variedad = variedad;
-
-}
-creator(
+  constructor(
     Nombre: string,
     precio: number,
     thc: number,
@@ -219,11 +197,30 @@ creator(
     stock: boolean,
     cod_proveedor: number,
     Cosecha: Date,
-    N_apaleo : number,
+    N_apaleo: number,
     mutable: boolean,
     variedad: string,
     id_p?: number,
-    type?:string
+    type?: string
+  ) {
+    super(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p);
+    this.N_Apaleo = N_apaleo;
+    this.mutable = mutable;
+    this.variedad = variedad;
+  }
+  creator(
+    Nombre: string,
+    precio: number,
+    thc: number,
+    cbd: string,
+    stock: boolean,
+    cod_proveedor: number,
+    Cosecha: Date,
+    N_apaleo: number,
+    mutable: boolean,
+    variedad: string,
+    id_p?: number,
+    type?: string
   ) {
     if (id_p == undefined) {
       return new Extracto(
@@ -234,9 +231,9 @@ creator(
         stock,
         cod_proveedor,
         Cosecha,
-        N_apaleo ,
+        N_apaleo,
         mutable,
-        variedad 
+        variedad
       );
     } else {
       return new Extracto(
@@ -247,7 +244,7 @@ creator(
         stock,
         cod_proveedor,
         Cosecha,
-        N_apaleo ,
+        N_apaleo,
         mutable,
         variedad,
         id_p,
@@ -257,21 +254,20 @@ creator(
   }
 }
 
-//objeto vacio 
+//objeto vacio
 
 export const ExtractFunc = new Extracto(
-    "",
-    0,
-    0,
-    "",
-    false,
-    0,
-    new Date(),
-    0,
-    false,
-    ""
-  );
-  
+  "",
+  0,
+  0,
+  "",
+  false,
+  0,
+  new Date(),
+  0,
+  false,
+  ""
+);
 
 //esquemas
 
@@ -291,27 +287,26 @@ const PlantaSchema = new Schema({
 });
 
 const Extractoschema = new Schema({
-    Nombre: { type: String },
-    precio: { type: Number },
-    thc: { type: Number },
-    cbd: { type: String },
-    cosecha: { type: Date },
-    stock: { type: Boolean },
-    cod_proveedor: { type: Number },
-    N_apaleo : {type: Number},
-    mutable : {type: Boolean},
-    variedad : {type: String},
-    id_p: { type: Number },
-    type: { type: String },
-  });
-  
+  Nombre: { type: String },
+  precio: { type: Number },
+  thc: { type: Number },
+  cbd: { type: String },
+  cosecha: { type: Date },
+  stock: { type: Boolean },
+  cod_proveedor: { type: Number },
+  N_apaleo: { type: Number },
+  mutable: { type: Boolean },
+  variedad: { type: String },
+  id_p: { type: Number },
+  type: { type: String },
+});
 
-//plugin 
+//plugin
 
 autoIncrement.initialize(connection);
 
-PlantaSchema.plugin(autoIncrement.plugin, "Plantas");
-Extractoschema.plugin(autoIncrement.plugin, "Extracto");
+PlantaSchema.plugin(autoIncrement.plugin, {model:"Plantas" , field:"id_p"});
+Extractoschema.plugin(autoIncrement.plugin, {model:"Extracto" , field:"id_p"});
 
 //modelos
 
@@ -321,7 +316,6 @@ export const plantModel: Plantas | any = connection.model<Plantas>(
 );
 
 export const ExtractModel: Plantas | any = connection.model<Extracto>(
-    "productos",
-    PlantaSchema
-  );
-  
+  "productos",
+  PlantaSchema
+);

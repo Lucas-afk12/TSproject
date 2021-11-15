@@ -1,7 +1,7 @@
 import { userMenu } from "./UserComponent";
 import { clientModel, Cliente, tCliente, ClientFunc } from "./model/clientes";
 import { sessionMenu, UserActive } from "./vistas/menu";
-import { Plantas, plantFunc, Extracto, ExtractFunc } from "./model/productos";
+import { Plantas, plantFunc, Extracto, ExtractFunc, plantModel } from "./model/productos";
 
 export const main = async () => {
   let user_conected: tCliente | boolean = await ClientFunc.conected();
@@ -90,15 +90,14 @@ const options = async () => {
           }
         }
         console.log("lista de plantas:");
-        console.log("\n")
+        console.log("\n");
         for (let planta of plantas) {
           console.log(
             `${planta.id}.-${planta.NombreProducto} , precioG= ${planta._precio}€ , stock= ${planta._stock} , genetica= ${planta.tipo} , ${planta.Predominancia} `
           );
         }
 
-        for (let extracto of extractos){
-
+        for (let extracto of extractos) {
         }
       };
       await Product_list();
