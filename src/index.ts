@@ -1,11 +1,10 @@
 import { userMenu } from "./UserComponent";
 import { clientModel, Cliente, tCliente, ClientFunc } from "./model/clientes";
 import { sessionMenu, UserActive } from "./vistas/menu";
-import { db } from "./database/database";
-import { Plantas } from "./model/productos";
+import { Plantas, plantFunc, Extracto, ExtractFunc } from "./model/productos";
 
 export const main = async () => {
-  const user_conected: tCliente | boolean = await ClientFunc.conected();
+  let user_conected: tCliente | boolean = await ClientFunc.conected();
   if (user_conected != false) {
     await klk(user_conected);
   } else {
@@ -15,7 +14,7 @@ export const main = async () => {
 };
 
 const klk = async (_user: any) => {
-  let client: Cliente = ClientFunc.creator(
+  const client: Cliente = ClientFunc.creator(
     _user.username,
     _user._apellido,
     _user._dni,
@@ -48,12 +47,66 @@ const klk = async (_user: any) => {
 
 const options = async () => {
   let n = await UserActive();
+  let Productos = [];
+  let plantas: Plantas[] = [];
+  let extractos: Extracto[] = [];
   switch (n) {
     case 0: {
-      const listar = "a";
+      const Product_list = async () => {
+        console.clear();
+        Productos = await plantFunc.get_products();
+        for (let Product of Productos) {
+          if (Product.type == "p") {
+            let temp: Plantas = plantFunc.creator(
+              Product.Nombre,
+              Product.precio,
+              Product.thc,
+              Product.cbd,
+              Product.stock,
+              Product.cod_proveedor,
+              Product.genetica,
+              Product.humedad,
+              Product.Apta_para_extracto,
+              Product.cosecha,
+              Product.id_p
+            );
+            plantas.push(temp);
+          }
+
+          if (Product.type == "e") {
+            let temp: Extracto = ExtractFunc.creator(
+              Product.Nombre,
+              Product.precio,
+              Product.thc,
+              Product.cbd,
+              Product.stock,
+              Product.cod_proveedor,
+              Product.N_apaleo,
+              Product.mutable,
+              Product.variedad,
+              Product.id_p
+            );
+            extractos.push(temp);
+          }
+        }
+        console.log("lista de plantas:");
+        console.log("\n")
+        plantas.sort((a,b) => (a._precio > b._precio) ? 1 : ((b._precio > a._precio) ? -1 : 0))
+        for (let planta of plantas) {
+          console.log(
+            `${planta.id}.-${planta.NombreProducto} , precioG= ${planta._precio}€ , stock= ${planta._stock} , genetica= ${planta.tipo} , ${planta.Predominancia} `
+          );
+        }
+
+        for (let extracto of extractos){
+
+        }
+      };
+      await Product_list();
       break;
     }
   }
+  await options();
 };
 
 main();

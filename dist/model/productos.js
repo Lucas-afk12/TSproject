@@ -51,13 +51,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.plantModel = exports.Plantas = exports.Productos = void 0;
+exports.ExtractModel = exports.plantModel = exports.ExtractFunc = exports.Extracto = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
 var mongoose_1 = require("mongoose");
-var autoIncrement = require('mongoose-auto-increment');
-var connection = (0, mongoose_1.createConnection)('mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
-//Productos 
+var autoIncrement = require("mongoose-auto-increment");
+var connection = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+//Productos
 var Productos = /** @class */ (function () {
-    function Productos(Nombre, precio, thc, cbd, stock, cod_proveedor, id_p) {
+    function Productos(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) {
         this.id_p = id_p;
         this.Nombre = Nombre;
         this.precio = precio;
@@ -65,27 +65,141 @@ var Productos = /** @class */ (function () {
         this.cbd = cbd;
         this.stock = stock;
         this.cod_proveedor = cod_proveedor;
+        this.Cosecha = Cosecha;
         this.id_p = id_p;
+        this.type = type;
     }
+    Object.defineProperty(Productos.prototype, "NombreProducto", {
+        get: function () {
+            return this.Nombre;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Productos.prototype, "id", {
+        get: function () {
+            return this.id_p;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Productos.prototype, "_precio", {
+        get: function () {
+            return this.precio;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Productos.prototype, "_stock", {
+        get: function () {
+            return this.stock;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Productos.prototype, "tipo", {
+        get: function () {
+            return this.type;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Productos.prototype.get_products = function () {
+        var _this = this;
+        var promise = new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var query;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, exports.plantModel.find()];
+                    case 1:
+                        query = _a.sent();
+                        if (query != null) {
+                            resolve(query);
+                        }
+                        else {
+                            reject(console.log("no hay ningun producto"));
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        return promise;
+    };
+    Object.defineProperty(Productos.prototype, "cosecha", {
+        get: function () {
+            return this.Cosecha;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Productos;
 }());
 exports.Productos = Productos;
-//subaclases de producto.
 var Plantas = /** @class */ (function (_super) {
     __extends(Plantas, _super);
-    function Plantas(Nombre, precio, thc, cbd, stock, cod_proveedor, genetica, humedad, Apta_para_extracto, id_p) {
-        var _this = _super.call(this, Nombre, precio, thc, cbd, stock, cod_proveedor, id_p) || this;
-        _this.type = "p";
-        _this.genetica = genetica;
+    function Plantas(Nombre, precio, thc, cbd, stock, cod_proveedor, Genetica, humedad, Apta_para_extracto, Cosecha, id_p, type) {
+        var _this = _super.call(this, Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) || this;
+        _this.Genetica = Genetica;
         _this.humedad = humedad;
         _this.Apta_para_extracto = Apta_para_extracto;
         return _this;
     }
+    Object.defineProperty(Plantas.prototype, "tipo", {
+        get: function () {
+            return this.Genetica.tipo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Plantas.prototype, "Predominancia", {
+        get: function () {
+            return this.Genetica.Predominancia;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Plantas.prototype.creator = function (Nombre, precio, thc, cbd, stock, cod_proveedor, genetica, humedad, apta_para_extracto, Cosecha, id_p, type) {
+        if (id_p == undefined) {
+            return new Plantas(Nombre, precio, thc, cbd, stock, cod_proveedor, genetica, humedad, apta_para_extracto, Cosecha);
+        }
+        else {
+            return new Plantas(Nombre, precio, thc, cbd, stock, cod_proveedor, genetica, humedad, apta_para_extracto, Cosecha, id_p, type);
+        }
+    };
     return Plantas;
 }(Productos));
 exports.Plantas = Plantas;
+// Objeto vacio para ejecutar funciones.
+var genetica = {
+    tipo: "",
+    Predominancia: "",
+};
+exports.plantFunc = new Plantas("", 0, 0, "", false, 0, genetica, 0, false, new Date());
+var Extracto = /** @class */ (function (_super) {
+    __extends(Extracto, _super);
+    function Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
+        var _this = _super.call(this, Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) || this;
+        _this.N_Apaleo = N_apaleo;
+        _this.mutable = mutable;
+        _this.variedad = variedad;
+        return _this;
+    }
+    Extracto.prototype.creator = function (Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
+        if (id_p == undefined) {
+            return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad);
+        }
+        else {
+            return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type);
+        }
+    };
+    return Extracto;
+}(Productos));
+exports.Extracto = Extracto;
+//objeto vacio 
+exports.ExtractFunc = new Extracto("", 0, 0, "", false, 0, new Date(), 0, false, "");
+//esquemas
 var PlantaSchema = new mongoose_1.Schema({
-    planta: { type: String },
+    Nombre: { type: String },
     precio: { type: Number },
     thc: { type: Number },
     cbd: { type: String },
@@ -94,23 +208,28 @@ var PlantaSchema = new mongoose_1.Schema({
     cod_proveedor: { type: Number },
     genetica: { type: Object },
     humedad: { type: Number },
-    apta_para_extracto: { type: Boolean },
+    Apta_para_extracto: { type: Boolean },
     id_p: { type: Number },
-    type: { type: String }
+    type: { type: String },
 });
+var Extractoschema = new mongoose_1.Schema({
+    Nombre: { type: String },
+    precio: { type: Number },
+    thc: { type: Number },
+    cbd: { type: String },
+    cosecha: { type: Date },
+    stock: { type: Boolean },
+    cod_proveedor: { type: Number },
+    N_apaleo: { type: Number },
+    mutable: { type: Boolean },
+    variedad: { type: String },
+    id_p: { type: Number },
+    type: { type: String },
+});
+//plugin 
 autoIncrement.initialize(connection);
-PlantaSchema.plugin(autoIncrement.plugin, 'Plantas');
-exports.plantModel = connection.model('productos', PlantaSchema);
-var aa = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var hola;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, exports.plantModel.find()];
-            case 1:
-                hola = _a.sent();
-                console.log(hola);
-                return [2 /*return*/];
-        }
-    });
-}); };
-aa();
+PlantaSchema.plugin(autoIncrement.plugin, "Plantas");
+Extractoschema.plugin(autoIncrement.plugin, "Extracto");
+//modelos
+exports.plantModel = connection.model("productos", PlantaSchema);
+exports.ExtractModel = connection.model("productos", PlantaSchema);

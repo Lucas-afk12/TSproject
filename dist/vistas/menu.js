@@ -76,7 +76,7 @@ var UserActive = function () { return __awaiter(void 0, void 0, void 0, function
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                console.clear();
+                console.log('\n');
                 console.log('0.- ver lista de productos');
                 console.log('1.- Añadir Producto al carro');
                 console.log('2.- eliminar productos del carro');

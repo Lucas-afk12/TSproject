@@ -20,7 +20,7 @@ export const sessionMenu = async () => {
 
 export const UserActive = async () => {
     let n: number
-    console.clear()
+    console.log('\n')
     console.log('0.- ver lista de productos')
     console.log('1.- Añadir Producto al carro')
     console.log('2.- eliminar productos del carro')

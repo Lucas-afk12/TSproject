@@ -40,6 +40,7 @@ exports.main = void 0;
 var UserComponent_1 = require("./UserComponent");
 var clientes_1 = require("./model/clientes");
 var menu_1 = require("./vistas/menu");
+var productos_1 = require("./model/productos");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var user_conected;
     return __generator(this, function (_a) {
@@ -96,18 +97,62 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
     });
 }); };
 var options = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var n, listar;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var n, Productos, plantas, extractos, _a, Product_list;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0: return [4 /*yield*/, (0, menu_1.UserActive)()];
             case 1:
-                n = _a.sent();
-                switch (n) {
-                    case 0: {
-                        listar = "a";
-                        break;
-                    }
+                n = _b.sent();
+                Productos = [];
+                plantas = [];
+                extractos = [];
+                _a = n;
+                switch (_a) {
+                    case 0: return [3 /*break*/, 2];
                 }
+                return [3 /*break*/, 4];
+            case 2:
+                Product_list = function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var _i, Productos_1, Product, temp, temp, _a, plantas_1, planta, _b, extractos_1, extracto;
+                    return __generator(this, function (_c) {
+                        switch (_c.label) {
+                            case 0:
+                                console.clear();
+                                return [4 /*yield*/, productos_1.plantFunc.get_products()];
+                            case 1:
+                                Productos = _c.sent();
+                                for (_i = 0, Productos_1 = Productos; _i < Productos_1.length; _i++) {
+                                    Product = Productos_1[_i];
+                                    if (Product.type == "p") {
+                                        temp = productos_1.plantFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.genetica, Product.humedad, Product.Apta_para_extracto, Product.cosecha, Product.id_p);
+                                        plantas.push(temp);
+                                    }
+                                    if (Product.type == "e") {
+                                        temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p);
+                                        extractos.push(temp);
+                                    }
+                                }
+                                console.log("lista de plantas:");
+                                console.log("\n");
+                                plantas.sort(function (a, b) { return (a._precio > b._precio) ? 1 : ((b._precio > a._precio) ? -1 : 0); });
+                                for (_a = 0, plantas_1 = plantas; _a < plantas_1.length; _a++) {
+                                    planta = plantas_1[_a];
+                                    console.log(planta.id + ".-" + planta.NombreProducto + " , precioG= " + planta._precio + "\u20AC , stock= " + planta._stock + " , genetica= " + planta.tipo + " , " + planta.Predominancia + " ");
+                                }
+                                for (_b = 0, extractos_1 = extractos; _b < extractos_1.length; _b++) {
+                                    extracto = extractos_1[_b];
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
+                return [4 /*yield*/, Product_list()];
+            case 3:
+                _b.sent();
+                return [3 /*break*/, 4];
+            case 4: return [4 /*yield*/, options()];
+            case 5:
+                _b.sent();
                 return [2 /*return*/];
         }
     });
