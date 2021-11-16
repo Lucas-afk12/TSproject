@@ -4,6 +4,9 @@ const connection = createConnection(
   "mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 );
 
+const connectio = createConnection(
+  "mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+);
 //Productos
 
 export class Productos {
@@ -61,7 +64,7 @@ export class Productos {
 
   get_products() {
     const promise = new Promise<Array<any>>(async (resolve, reject) => {
-      let query = await plantModel.find();
+      let query : Array<any> = await plantModel.find();
       if (query != null) {
         resolve(query);
       } else {
@@ -72,7 +75,13 @@ export class Productos {
   }
 
   get cosecha() {
-    return this.Cosecha;
+    var opciones :any = { year: 'numeric', month: 'short', day: 'numeric' };
+    var fecha = new Date(this.Cosecha)
+      .toLocaleDateString('es',opciones)
+      .replace(/ /g,'-')
+      .replace('.','')
+      .replace(/-([a-z])/, function (x) {return '-' + x[1].toUpperCase()});
+    return fecha
   }
 }
 
@@ -160,6 +169,11 @@ export class Plantas extends Productos {
       );
     }
   }
+  mostrar(){
+  console.log(
+    `${this.id}.-${this.NombreProducto} , precioG= ${this._precio}€ , stock= ${this._stock} , genetica= ${this.tipo} , ${this.Predominancia} ,  Fecha = ${this.cosecha}`
+  );
+}
 }
 
 // Objeto vacio para ejecutar funciones.
@@ -185,7 +199,7 @@ export const plantFunc = new Plantas(
 //subclase de extracto
 
 export class Extracto extends Productos {
-  N_Apaleo: number;
+  N_apaleo: number;
   mutable: boolean;
   variedad: string;
 
@@ -204,7 +218,7 @@ export class Extracto extends Productos {
     type?: string
   ) {
     super(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p);
-    this.N_Apaleo = N_apaleo;
+    this.N_apaleo = N_apaleo;
     this.mutable = mutable;
     this.variedad = variedad;
   }
@@ -282,6 +296,9 @@ const PlantaSchema = new Schema({
   genetica: { type: Object },
   humedad: { type: Number },
   Apta_para_extracto: { type: Boolean },
+  N_apaleo: { type: Number },
+  mutable: { type: Boolean },
+  variedad: { type: String },
   id_p: { type: Number },
   type: { type: String },
 });
@@ -310,12 +327,14 @@ Extractoschema.plugin(autoIncrement.plugin, {model:"Extracto" , field:"id_p"});
 
 //modelos
 
+export const ExtractModel: Plantas | any = connectio.model<Extracto>(
+  "productos",
+  Extractoschema
+);
+
 export const plantModel: Plantas | any = connection.model<Plantas>(
   "productos",
   PlantaSchema
 );
 
-export const ExtractModel: Plantas | any = connection.model<Extracto>(
-  "productos",
-  PlantaSchema
-);
+

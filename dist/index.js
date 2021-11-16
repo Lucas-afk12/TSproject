@@ -41,6 +41,7 @@ var UserComponent_1 = require("./UserComponent");
 var clientes_1 = require("./model/clientes");
 var menu_1 = require("./vistas/menu");
 var productos_1 = require("./model/productos");
+var lecturaTeclado_1 = require("./vistas/lecturaTeclado");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var user_conected;
     return __generator(this, function (_a) {
@@ -70,7 +71,7 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                client = clientes_1.ClientFunc.creator(_user.username, _user._apellido, _user._dni, _user._nombreUsuario, _user._Contraseña, _user._pedidos, _user._gramos, _user._recibo, _user._status, _user._id);
+                client = clientes_1.ClientFunc.creator(_user._nombre, _user._apellidos, _user._dni, _user._nombreUsuario, _user._Contraseña, _user._pedidos, _user._gramos, _user._recibo, _user._status, _user._id);
                 console.clear();
                 console.log(" tu usuario actual: " + client.username);
                 return [4 /*yield*/, (0, menu_1.sessionMenu)()];
@@ -78,10 +79,10 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
                 n = _b.sent();
                 _a = n;
                 switch (_a) {
-                    case "s": return [3 /*break*/, 2];
+                    case 's': return [3 /*break*/, 2];
                 }
                 return [3 /*break*/, 4];
-            case 2: return [4 /*yield*/, options()];
+            case 2: return [4 /*yield*/, options(client)];
             case 3:
                 _b.sent();
                 _b.label = 4;
@@ -96,8 +97,8 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
         }
     });
 }); };
-var options = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var n, Productos, plantas, extractos, _a, Product_list;
+var options = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
+    var n, Productos, plantas, extractos, Product_list, _a, Añadir;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, (0, menu_1.UserActive)()];
@@ -106,54 +107,95 @@ var options = function () { return __awaiter(void 0, void 0, void 0, function ()
                 Productos = [];
                 plantas = [];
                 extractos = [];
-                _a = n;
-                switch (_a) {
-                    case 0: return [3 /*break*/, 2];
-                }
-                return [3 /*break*/, 4];
-            case 2:
                 Product_list = function () { return __awaiter(void 0, void 0, void 0, function () {
-                    var _i, Productos_1, Product, temp, temp, _a, plantas_1, planta, _b, extractos_1, extracto;
-                    return __generator(this, function (_c) {
-                        switch (_c.label) {
+                    var _i, Productos_1, Product, temp, temp;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
                             case 0:
                                 console.clear();
                                 return [4 /*yield*/, productos_1.plantFunc.get_products()];
                             case 1:
-                                Productos = _c.sent();
+                                Productos = _a.sent();
                                 for (_i = 0, Productos_1 = Productos; _i < Productos_1.length; _i++) {
                                     Product = Productos_1[_i];
-                                    if (Product.type == "p") {
+                                    if (Product.type == 'p') {
                                         temp = productos_1.plantFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.genetica, Product.humedad, Product.Apta_para_extracto, Product.cosecha, Product.id_p);
                                         plantas.push(temp);
                                     }
-                                    if (Product.type == "e") {
-                                        temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p);
+                                    if (Product.type == 'e') {
+                                        temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.cosecha, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p, Product.type);
                                         extractos.push(temp);
                                     }
-                                }
-                                console.log("lista de plantas:");
-                                console.log("\n");
-                                for (_a = 0, plantas_1 = plantas; _a < plantas_1.length; _a++) {
-                                    planta = plantas_1[_a];
-                                    console.log(planta.id + ".-" + planta.NombreProducto + " , precioG= " + planta._precio + "\u20AC , stock= " + planta._stock + " , genetica= " + planta.tipo + " , " + planta.Predominancia + " ");
-                                }
-                                for (_b = 0, extractos_1 = extractos; _b < extractos_1.length; _b++) {
-                                    extracto = extractos_1[_b];
                                 }
                                 return [2 /*return*/];
                         }
                     });
                 }); };
                 return [4 /*yield*/, Product_list()];
-            case 3:
+            case 2:
                 _b.sent();
-                return [3 /*break*/, 4];
-            case 4: return [4 /*yield*/, options()];
+                _a = n;
+                switch (_a) {
+                    case 0: return [3 /*break*/, 3];
+                    case 1: return [3 /*break*/, 4];
+                }
+                return [3 /*break*/, 6];
+            case 3:
+                {
+                    mostrar(plantas, extractos, Productos);
+                    return [3 /*break*/, 6];
+                }
+                _b.label = 4;
+            case 4:
+                Añadir = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
+                    var buy, _a, temp, planta;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                mostrar(plantas, extractos, Productos);
+                                _a = parseInt;
+                                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca el id del producto que desea añadir al carrito')];
+                            case 1:
+                                buy = _a.apply(void 0, [_b.sent()]);
+                                temp = plantas.find(function (planta) { return planta.id == buy; });
+                                if (temp !== undefined) {
+                                    planta = temp;
+                                    if (planta._stock == false) {
+                                        console.log('Ese producto no esta disponible');
+                                    }
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); };
+                return [4 /*yield*/, Añadir(_user)];
             case 5:
+                _b.sent();
+                return [3 /*break*/, 6];
+            case 6: return [4 /*yield*/, options(_user)];
+            case 7:
                 _b.sent();
                 return [2 /*return*/];
         }
     });
 }); };
+var mostrar = function (plantas, extractos, productos) {
+    console.log('lista de plantas:');
+    console.log();
+    for (var _i = 0, productos_2 = productos; _i < productos_2.length; _i++) {
+        var Product = productos_2[_i];
+        if (Product.type == "e") {
+            console.log(Object.keys(Product._doc));
+            console.log(Product.mutable);
+        }
+    }
+    for (var _a = 0, plantas_1 = plantas; _a < plantas_1.length; _a++) {
+        var planta = plantas_1[_a];
+        planta.mostrar();
+    }
+    for (var _b = 0, extractos_1 = extractos; _b < extractos_1.length; _b++) {
+        var extracto = extractos_1[_b];
+        console.log(extracto);
+    }
+};
 (0, exports.main)();

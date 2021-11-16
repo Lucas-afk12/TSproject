@@ -137,7 +137,7 @@ var Cliente = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this._nombreUsuario || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == '') {
+                        if (this._nombreUsuario == '' || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == '') {
                             solution.push('No puedes dejar ningun elemento vacio');
                         }
                         return [4 /*yield*/, this.Exist()];

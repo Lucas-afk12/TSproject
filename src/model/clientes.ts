@@ -127,7 +127,7 @@ export class Cliente {
 		let x = this._nombre
 		const promise = new Promise<Array<string>>(async (resolve, reject) => {
 		if (
-			this._nombreUsuario || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == ''
+			this._nombreUsuario == ''  || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == ''
 			){
 			solution.push('No puedes dejar ningun elemento vacio');
 		}

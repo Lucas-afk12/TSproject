@@ -51,10 +51,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExtractModel = exports.plantModel = exports.ExtractFunc = exports.Extracto = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
+exports.plantModel = exports.ExtractModel = exports.ExtractFunc = exports.Extracto = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
 var mongoose_1 = require("mongoose");
 var autoIncrement = require("mongoose-auto-increment");
 var connection = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+var connectio = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 //Productos
 var Productos = /** @class */ (function () {
     function Productos(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) {
@@ -127,7 +128,13 @@ var Productos = /** @class */ (function () {
     };
     Object.defineProperty(Productos.prototype, "cosecha", {
         get: function () {
-            return this.Cosecha;
+            var opciones = { year: 'numeric', month: 'short', day: 'numeric' };
+            var fecha = new Date(this.Cosecha)
+                .toLocaleDateString('es', opciones)
+                .replace(/ /g, '-')
+                .replace('.', '')
+                .replace(/-([a-z])/, function (x) { return '-' + x[1].toUpperCase(); });
+            return fecha;
         },
         enumerable: false,
         configurable: true
@@ -166,6 +173,9 @@ var Plantas = /** @class */ (function (_super) {
             return new Plantas(Nombre, precio, thc, cbd, stock, cod_proveedor, genetica, humedad, apta_para_extracto, Cosecha, id_p, type);
         }
     };
+    Plantas.prototype.mostrar = function () {
+        console.log(this.id + ".-" + this.NombreProducto + " , precioG= " + this._precio + "\u20AC , stock= " + this._stock + " , genetica= " + this.tipo + " , " + this.Predominancia + " ,  Fecha = " + this.cosecha);
+    };
     return Plantas;
 }(Productos));
 exports.Plantas = Plantas;
@@ -180,7 +190,7 @@ var Extracto = /** @class */ (function (_super) {
     __extends(Extracto, _super);
     function Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
         var _this = _super.call(this, Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) || this;
-        _this.N_Apaleo = N_apaleo;
+        _this.N_apaleo = N_apaleo;
         _this.mutable = mutable;
         _this.variedad = variedad;
         return _this;
@@ -210,6 +220,9 @@ var PlantaSchema = new mongoose_1.Schema({
     genetica: { type: Object },
     humedad: { type: Number },
     Apta_para_extracto: { type: Boolean },
+    N_apaleo: { type: Number },
+    mutable: { type: Boolean },
+    variedad: { type: String },
     id_p: { type: Number },
     type: { type: String },
 });
@@ -232,5 +245,5 @@ autoIncrement.initialize(connection);
 PlantaSchema.plugin(autoIncrement.plugin, { model: "Plantas", field: "id_p" });
 Extractoschema.plugin(autoIncrement.plugin, { model: "Extracto", field: "id_p" });
 //modelos
+exports.ExtractModel = connectio.model("productos", Extractoschema);
 exports.plantModel = connection.model("productos", PlantaSchema);
-exports.ExtractModel = connection.model("productos", PlantaSchema);
