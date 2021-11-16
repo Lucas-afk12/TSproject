@@ -126,6 +126,9 @@ var Productos = /** @class */ (function () {
         }); });
         return promise;
     };
+    Productos.prototype.totalprice = function (grams) {
+        return this._precio * grams;
+    };
     Object.defineProperty(Productos.prototype, "cosecha", {
         get: function () {
             var opciones = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -195,6 +198,27 @@ var Extracto = /** @class */ (function (_super) {
         _this.variedad = variedad;
         return _this;
     }
+    Object.defineProperty(Extracto.prototype, "_mutable", {
+        get: function () {
+            return this.mutable;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Extracto.prototype, "apaleo", {
+        get: function () {
+            return this.N_apaleo;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Extracto.prototype, "_variedad", {
+        get: function () {
+            return this.variedad;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Extracto.prototype.creator = function (Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
         if (id_p == undefined) {
             return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad);
@@ -202,6 +226,9 @@ var Extracto = /** @class */ (function (_super) {
         else {
             return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type);
         }
+    };
+    Extracto.prototype.mostrar = function () {
+        console.log(this.id + ".-" + this.NombreProducto + " , varieda=" + this._variedad + " , precioG= " + this._precio + "\u20AC , Potencia ={thc = " + this.thc + "% , cbd= " + this.cbd + "%} , mutable= " + this._mutable + " , N_apaleo= " + this.apaleo + " , stock= " + this._stock + " ,  Fecha = " + this.cosecha);
     };
     return Extracto;
 }(Productos));

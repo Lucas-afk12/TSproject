@@ -79,7 +79,7 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
                 n = _b.sent();
                 _a = n;
                 switch (_a) {
-                    case 's': return [3 /*break*/, 2];
+                    case "s": return [3 /*break*/, 2];
                 }
                 return [3 /*break*/, 4];
             case 2: return [4 /*yield*/, options(client)];
@@ -98,7 +98,7 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
     });
 }); };
 var options = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
-    var n, Productos, plantas, extractos, Product_list, _a, Añadir;
+    var n, Productos, plantas, extractos, Product_list, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0: return [4 /*yield*/, (0, menu_1.UserActive)()];
@@ -118,11 +118,11 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                                 Productos = _a.sent();
                                 for (_i = 0, Productos_1 = Productos; _i < Productos_1.length; _i++) {
                                     Product = Productos_1[_i];
-                                    if (Product.type == 'p') {
+                                    if (Product.type == "p") {
                                         temp = productos_1.plantFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.genetica, Product.humedad, Product.Apta_para_extracto, Product.cosecha, Product.id_p);
                                         plantas.push(temp);
                                     }
-                                    if (Product.type == 'e') {
+                                    if (Product.type == "e") {
                                         temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.cosecha, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p, Product.type);
                                         extractos.push(temp);
                                     }
@@ -138,64 +138,97 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                 switch (_a) {
                     case 0: return [3 /*break*/, 3];
                     case 1: return [3 /*break*/, 4];
+                    case 2: return [3 /*break*/, 6];
+                    case 3: return [3 /*break*/, 7];
                 }
-                return [3 /*break*/, 6];
+                return [3 /*break*/, 9];
             case 3:
                 {
-                    mostrar(plantas, extractos, Productos);
-                    return [3 /*break*/, 6];
+                    mostrar(plantas, extractos);
+                    return [3 /*break*/, 9];
                 }
                 _b.label = 4;
-            case 4:
-                Añadir = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
-                    var buy, _a, temp, planta;
-                    return __generator(this, function (_b) {
-                        switch (_b.label) {
-                            case 0:
-                                mostrar(plantas, extractos, Productos);
-                                _a = parseInt;
-                                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca el id del producto que desea añadir al carrito')];
-                            case 1:
-                                buy = _a.apply(void 0, [_b.sent()]);
-                                temp = plantas.find(function (planta) { return planta.id == buy; });
-                                if (temp !== undefined) {
-                                    planta = temp;
-                                    if (planta._stock == false) {
-                                        console.log('Ese producto no esta disponible');
-                                    }
-                                }
-                                return [2 /*return*/];
-                        }
-                    });
-                }); };
-                return [4 /*yield*/, Añadir(_user)];
+            case 4: return [4 /*yield*/, Añadir(_user, plantas, extractos)];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 6];
-            case 6: return [4 /*yield*/, options(_user)];
-            case 7:
+                return [3 /*break*/, 9];
+            case 6:
+                {
+                    return [3 /*break*/, 9];
+                }
+                _b.label = 7;
+            case 7: return [4 /*yield*/, ver(_user, plantas, extractos)];
+            case 8:
+                _b.sent();
+                return [3 /*break*/, 9];
+            case 9: return [4 /*yield*/, options(_user)];
+            case 10:
                 _b.sent();
                 return [2 /*return*/];
         }
     });
 }); };
-var mostrar = function (plantas, extractos, productos) {
-    console.log('lista de plantas:');
-    console.log();
-    for (var _i = 0, productos_2 = productos; _i < productos_2.length; _i++) {
-        var Product = productos_2[_i];
-        if (Product.type == "e") {
-            console.log(Object.keys(Product._doc));
-            console.log(Product.mutable);
-        }
-    }
-    for (var _a = 0, plantas_1 = plantas; _a < plantas_1.length; _a++) {
-        var planta = plantas_1[_a];
+var mostrar = function (plantas, extractos) {
+    console.clear();
+    console.log("lista de plantas:");
+    for (var _i = 0, plantas_1 = plantas; _i < plantas_1.length; _i++) {
+        var planta = plantas_1[_i];
         planta.mostrar();
     }
-    for (var _b = 0, extractos_1 = extractos; _b < extractos_1.length; _b++) {
-        var extracto = extractos_1[_b];
-        console.log(extracto);
+    console.log("\n");
+    console.log("lista de extractos:");
+    for (var _a = 0, extractos_1 = extractos; _a < extractos_1.length; _a++) {
+        var extracto = extractos_1[_a];
+        extracto.mostrar();
     }
 };
+var Añadir = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+    var buy, _a, grams, _b, temp, producto, temp1, producto;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                mostrar(plantas, extractos);
+                console.log("\n");
+                _a = parseInt;
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("Introduzca el id del producto que desea añadir al carrito")];
+            case 1:
+                buy = _a.apply(void 0, [_c.sent()]);
+                _b = parseInt;
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("Cuantos gramos le gustaria comprar")];
+            case 2:
+                grams = _b.apply(void 0, [_c.sent()]);
+                temp = plantas.find(function (producto) { return producto.id == buy; });
+                if (temp !== undefined) {
+                    producto = temp;
+                    if (producto._stock == false) {
+                        console.log("Ese producto no esta disponible");
+                    }
+                    else {
+                        _user.addpedido = producto.id;
+                        _user.addgrams = grams;
+                    }
+                }
+                else {
+                    temp1 = extractos.find(function (extracto) { return extracto.id == buy; });
+                    if (temp1 !== undefined) {
+                        producto = temp1;
+                        if (producto._stock == false) {
+                            console.log("Ese producto no esta disponible");
+                        }
+                        else {
+                            _user.addpedido = producto.id;
+                            _user.addgrams = grams;
+                        }
+                    }
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+var ver = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        _user.ver(plantas, extractos);
+        return [2 /*return*/];
+    });
+}); };
 (0, exports.main)();

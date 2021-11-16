@@ -70,7 +70,61 @@ var Cliente = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(Cliente.prototype, "pedidos", {
+        get: function () {
+            return this._pedidos;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Cliente.prototype, "gramos", {
+        get: function () {
+            return this._gramos;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Cliente.prototype, "addpedido", {
+        set: function (data) {
+            this._pedidos.push(data);
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(Cliente.prototype, "addgrams", {
+        set: function (data) {
+            this._gramos.push(data);
+        },
+        enumerable: false,
+        configurable: true
+    });
     //funciones de datos. 
+    Cliente.prototype.ver = function (plantas, extractos) {
+        var pedidos = this.pedidos;
+        var gramos = this.gramos;
+        var x = 0;
+        var total = 0;
+        var gram = gramos.reduce(function (a, b) { return a + b; });
+        var _loop_1 = function (pedido) {
+            var temp = plantas.find(function (planta) { return planta.id == pedido; });
+            if (temp !== undefined) {
+                console.log(gramos[x] + " gramos de " + temp.NombreProducto + " por un precio total de " + temp.totalprice(gramos[x]) + "\u20AC");
+            }
+            else {
+                var temp_1 = extractos.find(function (extracto) { return extracto.id == pedido; });
+                if (temp_1 !== undefined) {
+                    console.log(gramos[x] + " gramos de " + temp_1.NombreProducto + " por un precio total de " + temp_1.totalprice(gramos[x]) + "\u20AC");
+                }
+            }
+            total = temp.totalprice(gramos[x]) + total;
+            x++;
+        };
+        for (var _i = 0, pedidos_1 = pedidos; _i < pedidos_1.length; _i++) {
+            var pedido = pedidos_1[_i];
+            _loop_1(pedido);
+        }
+        console.log("un total de " + gram + " gramos por " + total + "\u20AC");
+    };
     //funciones tecnicas.
     Cliente.prototype.creator = function (_nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, id) {
         if (id === undefined) {
@@ -151,6 +205,8 @@ var Cliente = /** @class */ (function () {
             });
         }); });
         return promise;
+    };
+    Cliente.prototype.comprar = function (_producto) {
     };
     return Cliente;
 }());

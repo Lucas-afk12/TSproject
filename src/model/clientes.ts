@@ -1,5 +1,7 @@
 import { Schema, model, createConnection } from 'mongoose';
+import { Plantas , Extracto} from './productos';
 const autoIncrement = require('mongoose-auto-increment');
+
 const connection = createConnection(
 	'mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 );
@@ -13,8 +15,8 @@ export class Cliente {
 	private _dni: String;
 	private _nombreUsuario: string;
 	private _Contraseña: string;
-	private _pedidos: Array<Number> = [];
-	private _gramos: Array<Number> = [];
+	private _pedidos: Array<number> = [];
+	private _gramos: Array<number> = [];
 	private _recibo: Boolean;
 	private _status: Boolean;
 
@@ -24,8 +26,8 @@ export class Cliente {
 		_dni: string,
 		_nombreUsuario: string,
 		_Contraseña: string,
-		_pedidos: number[],
-		_gramos: Number[],
+		_pedidos: Array<number>,
+		_gramos: number[],
 		_recibo: boolean,
 		_status: boolean,
 		id?: number
@@ -50,8 +52,49 @@ export class Cliente {
 		return this._nombreUsuario;
 	}
 
+	get pedidos() {
+		return this._pedidos
+	}
 
+	get gramos(){
+		return this._gramos
+	}
+
+	set addpedido(data){
+		this._pedidos.push(data)
+	}
+
+	set addgrams(data){
+		this._gramos.push(data)
+	}
+	
 	//funciones de datos. 
+
+	ver( plantas: Plantas[] , extractos: Extracto[]) {
+
+		let pedidos : Array<number> = this.pedidos
+		let gramos : Array<number> = this.gramos
+		let x = 0
+		let total = 0
+		let gram = gramos.reduce((a,b)=>a+b)
+	
+		for (let pedido of pedidos){
+	
+			let temp : Plantas = plantas.find(planta => planta.id == pedido)
+			if (temp !== undefined){
+				console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
+			}else{
+				let temp : Extracto = extractos.find(extracto => extracto.id == pedido)
+			if (temp !== undefined){
+				console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
+			}
+		}	
+		total = temp.totalprice(gramos[x]) + total
+	
+		x++
+	}
+		console.log(`un total de ${gram} gramos por ${total}€`)	
+	}
 
 	//funciones tecnicas.
 	creator(
@@ -61,7 +104,7 @@ export class Cliente {
 		_nombreUsuario: string,
 		_Contraseña: string,
 		_pedidos: number[],
-		_gramos: Number[],
+		_gramos: number[],
 		_recibo: boolean,
 		_status: boolean,
 		id?: number
@@ -137,6 +180,10 @@ export class Cliente {
 		resolve(solution)
 	})
 	return promise
+	}
+
+	comprar (_producto : number) {
+		
 	}
 }
 

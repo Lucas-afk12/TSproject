@@ -74,6 +74,9 @@ export class Productos {
     return promise;
   }
 
+  totalprice (grams : number){
+    return this._precio * grams}
+
   get cosecha() {
     var opciones :any = { year: 'numeric', month: 'short', day: 'numeric' };
     var fecha = new Date(this.Cosecha)
@@ -199,9 +202,9 @@ export const plantFunc = new Plantas(
 //subclase de extracto
 
 export class Extracto extends Productos {
-  N_apaleo: number;
-  mutable: boolean;
-  variedad: string;
+  private N_apaleo: number;
+  private mutable: boolean;
+  private variedad: string;
 
   constructor(
     Nombre: string,
@@ -222,6 +225,19 @@ export class Extracto extends Productos {
     this.mutable = mutable;
     this.variedad = variedad;
   }
+
+  get _mutable(){
+    return this.mutable
+  }
+
+  get apaleo() {
+    return this.N_apaleo
+  }
+
+  get _variedad(){
+    return this.variedad
+  }
+
   creator(
     Nombre: string,
     precio: number,
@@ -265,6 +281,11 @@ export class Extracto extends Productos {
         type
       );
     }
+  }
+  mostrar(){
+    console.log(
+      `${this.id}.-${this.NombreProducto} , varieda=${this._variedad} , precioG= ${this._precio}€ , Potencia ={thc = ${this.thc}% , cbd= ${this.cbd}%} , mutable= ${this._mutable} , N_apaleo= ${this.apaleo} , stock= ${this._stock} ,  Fecha = ${this.cosecha}`
+    );
   }
 }
 
