@@ -50,7 +50,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 1:
                 user_conected = _a.sent();
                 if (!(user_conected != false)) return [3 /*break*/, 3];
-                return [4 /*yield*/, klk(user_conected)];
+                return [4 /*yield*/, isOn(user_conected)];
             case 2:
                 _a.sent();
                 return [3 /*break*/, 5];
@@ -66,7 +66,7 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     });
 }); };
 exports.main = main;
-var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
+var isOn = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
     var client, n, _a;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -79,7 +79,7 @@ var klk = function (_user) { return __awaiter(void 0, void 0, void 0, function (
                 n = _b.sent();
                 _a = n;
                 switch (_a) {
-                    case "s": return [3 /*break*/, 2];
+                    case 's': return [3 /*break*/, 2];
                 }
                 return [3 /*break*/, 4];
             case 2: return [4 /*yield*/, options(client)];
@@ -118,11 +118,11 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                                 Productos = _a.sent();
                                 for (_i = 0, Productos_1 = Productos; _i < Productos_1.length; _i++) {
                                     Product = Productos_1[_i];
-                                    if (Product.type == "p") {
+                                    if (Product.type == 'p') {
                                         temp = productos_1.plantFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.genetica, Product.humedad, Product.Apta_para_extracto, Product.cosecha, Product.id_p);
                                         plantas.push(temp);
                                     }
-                                    if (Product.type == "e") {
+                                    if (Product.type == 'e') {
                                         temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.cosecha, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p, Product.type);
                                         extractos.push(temp);
                                     }
@@ -170,13 +170,13 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
 }); };
 var mostrar = function (plantas, extractos) {
     console.clear();
-    console.log("lista de plantas:");
+    console.log('lista de plantas:');
     for (var _i = 0, plantas_1 = plantas; _i < plantas_1.length; _i++) {
         var planta = plantas_1[_i];
         planta.mostrar();
     }
-    console.log("\n");
-    console.log("lista de extractos:");
+    console.log('\n');
+    console.log('lista de extractos:');
     for (var _a = 0, extractos_1 = extractos; _a < extractos_1.length; _a++) {
         var extracto = extractos_1[_a];
         extracto.mostrar();
@@ -188,36 +188,40 @@ var Añadir = function (_user, plantas, extractos) { return __awaiter(void 0, vo
         switch (_c.label) {
             case 0:
                 mostrar(plantas, extractos);
-                console.log("\n");
+                console.log('\n');
                 _a = parseInt;
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("Introduzca el id del producto que desea añadir al carrito")];
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca el id del producto que desea añadir al carrito')];
             case 1:
                 buy = _a.apply(void 0, [_c.sent()]);
                 _b = parseInt;
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("Cuantos gramos le gustaria comprar")];
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Cuantos gramos le gustaria comprar')];
             case 2:
                 grams = _b.apply(void 0, [_c.sent()]);
                 temp = plantas.find(function (producto) { return producto.id == buy; });
                 if (temp !== undefined) {
                     producto = temp;
                     if (producto._stock == false) {
-                        console.log("Ese producto no esta disponible");
+                        console.log('Ese producto no esta disponible');
                     }
                     else {
-                        _user.addpedido = producto.id;
-                        _user.addgrams = grams;
+                        if (producto.id != undefined) {
+                            _user.addpedido = producto.id;
+                            _user.addgrams = grams;
+                        }
                     }
                 }
                 else {
                     temp1 = extractos.find(function (extracto) { return extracto.id == buy; });
                     if (temp1 !== undefined) {
                         producto = temp1;
-                        if (producto._stock == false) {
-                            console.log("Ese producto no esta disponible");
+                        if (temp1._stock == false) {
+                            console.log('Ese producto no esta disponible');
                         }
                         else {
-                            _user.addpedido = producto.id;
-                            _user.addgrams = grams;
+                            if (producto.id != undefined) {
+                                _user.addpedido = producto.id;
+                                _user.addgrams = grams;
+                            }
                         }
                     }
                 }
@@ -227,7 +231,7 @@ var Añadir = function (_user, plantas, extractos) { return __awaiter(void 0, vo
 }); };
 var ver = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        _user.ver(plantas, extractos);
+        _user.verCarrito(plantas, extractos);
         return [2 /*return*/];
     });
 }); };

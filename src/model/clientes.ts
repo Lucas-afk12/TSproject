@@ -1,5 +1,5 @@
 import { Schema, model, createConnection } from 'mongoose';
-import { Plantas , Extracto} from './productos';
+import { Plantas, Extracto } from './productos';
 const autoIncrement = require('mongoose-auto-increment');
 
 const connection = createConnection(
@@ -53,47 +53,48 @@ export class Cliente {
 	}
 
 	get pedidos() {
-		return this._pedidos
+		return this._pedidos;
 	}
 
-	get gramos(){
-		return this._gramos
+	get gramos() {
+		return this._gramos;
 	}
 
-	set addpedido(data){
-		this._pedidos.push(data)
+	set addpedido(data:number) {
+		this._pedidos.push(data);
 	}
 
-	set addgrams(data){
-		this._gramos.push(data)
+	set addgrams(data : number) {
+		this._gramos.push(data);
 	}
-	
-	//funciones de datos. 
 
-	ver( plantas: Plantas[] , extractos: Extracto[]) {
+	//funciones de datos.
 
-		let pedidos : Array<number> = this.pedidos
-		let gramos : Array<number> = this.gramos
-		let x = 0
-		let total = 0
-		let gram = gramos.reduce((a,b)=>a+b)
-	
-		for (let pedido of pedidos){
-	
-			let temp : Plantas = plantas.find(planta => planta.id == pedido)
-			if (temp !== undefined){
+	verCarrito(plantas: Plantas[], extractos: Extracto[]) {
+		let pedidos: Array<number> = this.pedidos;
+		let gramos: Array<number> = this.gramos;
+		let x = 0;
+		let total = 0;
+		let gram = gramos.reduce((a, b) => a + b);
+
+		for (let pedido of pedidos) {
+			let temp: Plantas | undefined= (plantas.find((planta) => planta.id == pedido))
+			if (temp !== undefined) {
 				console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
-			}else{
-				let temp : Extracto = extractos.find(extracto => extracto.id == pedido)
-			if (temp !== undefined){
-				console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
+				total = temp.totalprice(gramos[x]) + total
+			
+			} else {
+				let temp: Extracto |undefined = extractos.find(
+					(extracto) => extracto.id == pedido
+				);
+				if (temp !== undefined) {
+					console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`);
+					total = temp.totalprice(gramos[x]) + total;
+				}
 			}
-		}	
-		total = temp.totalprice(gramos[x]) + total
-	
-		x++
-	}
-		console.log(`un total de ${gram} gramos por ${total}€`)	
+			x++;
+		}
+		console.log(`un total de ${gram} gramos por ${total}€`);
 	}
 
 	//funciones tecnicas.
@@ -138,12 +139,14 @@ export class Cliente {
 
 	Exist(user?: string) {
 		const promise = new Promise<boolean>(async (resolve, reject) => {
-            let exist = "a" 
-            if (user!=undefined){
-			exist = await clientModel.findOne({ _nombreUsuario: user });
-            }else{
-            exist = await clientModel.findOne({ _nombreUsuario: this._nombreUsuario }); 
-            }
+			let exist = 'a';
+			if (user != undefined) {
+				exist = await clientModel.findOne({ _nombreUsuario: user });
+			} else {
+				exist = await clientModel.findOne({
+					_nombreUsuario: this._nombreUsuario,
+				});
+			}
 			if (exist != null) {
 				resolve(true);
 			} else {
@@ -153,7 +156,7 @@ export class Cliente {
 		return promise;
 	}
 
-	conected() {
+	async conected() {
 		const promise = new Promise<tCliente | boolean>(async (resolve, reject) => {
 			let conected = await clientModel.findOne({ _status: true });
 			if (conected != null) {
@@ -165,26 +168,28 @@ export class Cliente {
 		return promise;
 	}
 
-	errorchecker(){
-		let solution :Array<string> = [] 
-		let x = this._nombre
+	errorchecker() {
+		let solution: Array<string> = [];
+		let x = this._nombre;
 		const promise = new Promise<Array<string>>(async (resolve, reject) => {
-		if (
-			this._nombreUsuario == ''  || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == ''
-			){
-			solution.push('No puedes dejar ningun elemento vacio');
-		}
-		if (await this.Exist()){
-			solution.push('Ese nombre de usuario ya existe')
-		}
-		resolve(solution)
-	})
-	return promise
+			if (
+				this._nombreUsuario == '' ||
+				this._nombre == '' ||
+				this._apellidos == '' ||
+				this._dni == '' ||
+				this._Contraseña == ''
+			) {
+				solution.push('No puedes dejar ningun elemento vacio');
+			}
+			if (await this.Exist()) {
+				solution.push('Ese nombre de usuario ya existe');
+			}
+			resolve(solution);
+		});
+		return promise;
 	}
 
-	comprar (_producto : number) {
-		
-	}
+	comprar(_producto: number) {}
 }
 
 //inizializamos una variable para ejecutar las funciones de administracion de los clientes.
@@ -197,7 +202,7 @@ export interface tCliente {
 	_apellidos: string;
 	_dni: string;
 	_nombreUsuario: string;
-	_Contraseña: string;	
+	_Contraseña: string;
 	_pedidos: number[];
 	_gramos: number[];
 	_recibo: boolean;

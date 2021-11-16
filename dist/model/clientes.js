@@ -98,25 +98,26 @@ var Cliente = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    //funciones de datos. 
-    Cliente.prototype.ver = function (plantas, extractos) {
+    //funciones de datos.
+    Cliente.prototype.verCarrito = function (plantas, extractos) {
         var pedidos = this.pedidos;
         var gramos = this.gramos;
         var x = 0;
         var total = 0;
         var gram = gramos.reduce(function (a, b) { return a + b; });
         var _loop_1 = function (pedido) {
-            var temp = plantas.find(function (planta) { return planta.id == pedido; });
+            var temp = (plantas.find(function (planta) { return planta.id == pedido; }));
             if (temp !== undefined) {
                 console.log(gramos[x] + " gramos de " + temp.NombreProducto + " por un precio total de " + temp.totalprice(gramos[x]) + "\u20AC");
+                total = temp.totalprice(gramos[x]) + total;
             }
             else {
                 var temp_1 = extractos.find(function (extracto) { return extracto.id == pedido; });
                 if (temp_1 !== undefined) {
                     console.log(gramos[x] + " gramos de " + temp_1.NombreProducto + " por un precio total de " + temp_1.totalprice(gramos[x]) + "\u20AC");
+                    total = temp_1.totalprice(gramos[x]) + total;
                 }
             }
-            total = temp.totalprice(gramos[x]) + total;
             x++;
         };
         for (var _i = 0, pedidos_1 = pedidos; _i < pedidos_1.length; _i++) {
@@ -139,13 +140,15 @@ var Cliente = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        exist = "a";
+                        exist = 'a';
                         if (!(user != undefined)) return [3 /*break*/, 2];
                         return [4 /*yield*/, exports.clientModel.findOne({ _nombreUsuario: user })];
                     case 1:
                         exist = _a.sent();
                         return [3 /*break*/, 4];
-                    case 2: return [4 /*yield*/, exports.clientModel.findOne({ _nombreUsuario: this._nombreUsuario })];
+                    case 2: return [4 /*yield*/, exports.clientModel.findOne({
+                            _nombreUsuario: this._nombreUsuario,
+                        })];
                     case 3:
                         exist = _a.sent();
                         _a.label = 4;
@@ -163,25 +166,30 @@ var Cliente = /** @class */ (function () {
         return promise;
     };
     Cliente.prototype.conected = function () {
-        var _this = this;
-        var promise = new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
-            var conected;
+        return __awaiter(this, void 0, void 0, function () {
+            var promise;
+            var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, exports.clientModel.findOne({ _status: true })];
-                    case 1:
-                        conected = _a.sent();
-                        if (conected != null) {
-                            resolve(conected);
+                promise = new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+                    var conected;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, exports.clientModel.findOne({ _status: true })];
+                            case 1:
+                                conected = _a.sent();
+                                if (conected != null) {
+                                    resolve(conected);
+                                }
+                                else {
+                                    resolve(false);
+                                }
+                                return [2 /*return*/];
                         }
-                        else {
-                            resolve(false);
-                        }
-                        return [2 /*return*/];
-                }
+                    });
+                }); });
+                return [2 /*return*/, promise];
             });
-        }); });
-        return promise;
+        });
     };
     Cliente.prototype.errorchecker = function () {
         var _this = this;
@@ -191,7 +199,11 @@ var Cliente = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (this._nombreUsuario == '' || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == '') {
+                        if (this._nombreUsuario == '' ||
+                            this._nombre == '' ||
+                            this._apellidos == '' ||
+                            this._dni == '' ||
+                            this._Contraseña == '') {
                             solution.push('No puedes dejar ningun elemento vacio');
                         }
                         return [4 /*yield*/, this.Exist()];
@@ -206,8 +218,7 @@ var Cliente = /** @class */ (function () {
         }); });
         return promise;
     };
-    Cliente.prototype.comprar = function (_producto) {
-    };
+    Cliente.prototype.comprar = function (_producto) { };
     return Cliente;
 }());
 exports.Cliente = Cliente;
