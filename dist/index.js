@@ -42,6 +42,7 @@ var clientes_1 = require("./model/clientes");
 var menu_1 = require("./vistas/menu");
 var productos_1 = require("./model/productos");
 var lecturaTeclado_1 = require("./vistas/lecturaTeclado");
+var pedidos_1 = require("./model/pedidos");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var user_conected;
     return __generator(this, function (_a) {
@@ -139,30 +140,34 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                     case 0: return [3 /*break*/, 3];
                     case 1: return [3 /*break*/, 4];
                     case 2: return [3 /*break*/, 6];
-                    case 3: return [3 /*break*/, 7];
+                    case 3: return [3 /*break*/, 8];
+                    case 6: return [3 /*break*/, 10];
                 }
-                return [3 /*break*/, 9];
+                return [3 /*break*/, 12];
             case 3:
                 {
                     mostrar(plantas, extractos);
-                    return [3 /*break*/, 9];
+                    return [3 /*break*/, 12];
                 }
                 _b.label = 4;
             case 4: return [4 /*yield*/, Añadir(_user, plantas, extractos)];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 9];
-            case 6:
-                {
-                    return [3 /*break*/, 9];
-                }
-                _b.label = 7;
-            case 7: return [4 /*yield*/, ver(_user, plantas, extractos)];
-            case 8:
+                return [3 /*break*/, 12];
+            case 6: return [4 /*yield*/, Eliminar(_user, plantas, extractos)];
+            case 7:
                 _b.sent();
-                return [3 /*break*/, 9];
-            case 9: return [4 /*yield*/, options(_user)];
-            case 10:
+                return [3 /*break*/, 12];
+            case 8: return [4 /*yield*/, ver(_user, plantas, extractos)];
+            case 9:
+                _b.sent();
+                return [3 /*break*/, 12];
+            case 10: return [4 /*yield*/, finalizar(_user, plantas, extractos)];
+            case 11:
+                _b.sent();
+                _b.label = 12;
+            case 12: return [4 /*yield*/, options(_user)];
+            case 13:
                 _b.sent();
                 return [2 /*return*/];
         }
@@ -232,6 +237,44 @@ var Añadir = function (_user, plantas, extractos) { return __awaiter(void 0, vo
 var ver = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         _user.verCarrito(plantas, extractos);
+        return [2 /*return*/];
+    });
+}); };
+var Eliminar = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+    var isEmpty, remove, _a, carrito;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                isEmpty = _user.verCarrito(plantas, extractos);
+                if (!(isEmpty !== false)) return [3 /*break*/, 2];
+                _a = parseInt;
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("introduzca el numero de producto que quiere eliminar")];
+            case 1:
+                remove = _a.apply(void 0, [_b.sent()]);
+                carrito = _user.pedidos;
+                carrito.splice(remove, 1);
+                _user.changepedido = carrito;
+                _b.label = 2;
+            case 2: return [2 /*return*/];
+        }
+    });
+}); };
+var finalizar = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+    var pedidos, gramos, id, pedido, pedidoSaver;
+    return __generator(this, function (_a) {
+        if (_user.pedidos.length === 0) {
+            console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito');
+        }
+        else {
+            pedidos = _user.pedidos;
+            gramos = _user.gramos;
+            id = _user._id;
+            if (id !== undefined) {
+                pedido = new pedidos_1.Pedidos(pedidos, gramos, id);
+                pedidoSaver = new pedidos_1.pedidoModel(pedido);
+                pedidoSaver.save();
+            }
+        }
         return [2 /*return*/];
     });
 }); };

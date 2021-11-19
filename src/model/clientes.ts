@@ -64,6 +64,10 @@ export class Cliente {
 		this._pedidos.push(data);
 	}
 
+	set changepedido(data: Array<number>){
+		this._pedidos = data
+	}
+
 	set addgrams(data : number) {
 		this._gramos.push(data);
 	}
@@ -75,26 +79,30 @@ export class Cliente {
 		let gramos: Array<number> = this.gramos;
 		let x = 0;
 		let total = 0;
+
+		if (pedidos.length !== 0){
 		let gram = gramos.reduce((a, b) => a + b);
 
 		for (let pedido of pedidos) {
 			let temp: Plantas | undefined= (plantas.find((planta) => planta.id == pedido))
 			if (temp !== undefined) {
-				console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
+				console.log(`${x}.- ${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
 				total = temp.totalprice(gramos[x]) + total
 			
 			} else {
-				let temp: Extracto |undefined = extractos.find(
-					(extracto) => extracto.id == pedido
-				);
+				let temp: Extracto |undefined = extractos.find((extracto) => extracto.id == pedido);
 				if (temp !== undefined) {
-					console.log(`${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`);
-					total = temp.totalprice(gramos[x]) + total;
+					console.log(`${x}.- ${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`);
+				total = temp.totalprice(gramos[x]) + total;
 				}
 			}
 			x++;
 		}
 		console.log(`un total de ${gram} gramos por ${total}€`);
+		}else{
+			console.log("el carrito esta vacio")
+			return false
+		}
 	}
 
 	//funciones tecnicas.

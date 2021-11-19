@@ -9,7 +9,7 @@ import {
 	plantModel,
 } from './model/productos';
 import { leerTeclado } from './vistas/lecturaTeclado';
-import { version } from 'mongoose';
+import { Pedidos , pedidoModel} from './model/pedidos';
 
 export const main = async () => {
 	let user_conected: tCliente | boolean = await ClientFunc.conected();
@@ -111,11 +111,16 @@ const options = async (_user: Cliente) => {
 			break;
 		}
 		case 2: {
+			await Eliminar(_user , plantas ,extractos);
 			break;
 		}
 		case 3: {
 			await ver(_user, plantas, extractos);
 			break;
+		}
+
+		case 6: {
+			await finalizar(_user , plantas , extractos)
 		}
 	}
 	await options(_user);
@@ -146,7 +151,7 @@ const Añadir = async (_user: Cliente,plantas: Plantas[],extractos: Extracto[]) 
 	let grams = parseInt(await leerTeclado('Cuantos gramos le gustaria comprar'));
 	let temp: Plantas | undefined = plantas.find((producto) => producto.id == buy);
 	if (temp !== undefined) {
-		let producto: Plantas = temp;
+		let producto: Plantas= temp;
 		if (producto._stock == false) {
 			console.log('Ese producto no esta disponible');
 		} else {
@@ -174,5 +179,30 @@ const Añadir = async (_user: Cliente,plantas: Plantas[],extractos: Extracto[]) 
 const ver = async (_user: Cliente,plantas: Plantas[],extractos: Extracto[]) => {
 	_user.verCarrito(plantas, extractos);
 };
+
+const Eliminar = async(_user:Cliente , plantas : Plantas[] , extractos : Extracto[]) =>{
+	let isEmpty = _user.verCarrito(plantas,extractos)
+	if (isEmpty !== false){
+		let remove = parseInt(await leerTeclado("introduzca el numero de producto que quiere eliminar"));
+		let carrito= _user.pedidos
+		carrito.splice(remove, 1)
+		_user.changepedido=carrito
+	}
+}
+
+const finalizar = async(_user:Cliente , plantas : Plantas[] , extractos : Extracto[]) => {
+	if (_user.pedidos.length === 0){
+		console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito')
+	}else{
+		let pedidos = _user.pedidos
+		let gramos = _user.gramos
+		let id = _user._id
+		if (id !== undefined){
+		let pedido = new Pedidos(pedidos,gramos,id)
+		let pedidoSaver = new pedidoModel(pedido)
+		pedidoSaver.save()
+		}
+	}
+}
 
 main();

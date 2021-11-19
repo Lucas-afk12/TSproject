@@ -148,21 +148,18 @@ db.productos.insertMany([
     cod_proveedor: 3,
     type: "p",
   },
-]);
-
-db.productos.insertMany([
   {
     Nombre: "kinder hash",
     precio: 12,
     thc: 32,
     cbd: "none",
     cosecha: new Date("2020,8,10"),
-    stock: false,
+    stock: true,
     cod_proveedor: 1,
     N_apaleo: 1,
     mutable: true,
     variedad: "ice",
     id_p: 11,
-    type: "p",
+    type: "e",
   }
-])
+]);
