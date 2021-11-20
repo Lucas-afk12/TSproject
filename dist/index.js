@@ -141,33 +141,43 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                     case 1: return [3 /*break*/, 4];
                     case 2: return [3 /*break*/, 6];
                     case 3: return [3 /*break*/, 8];
-                    case 6: return [3 /*break*/, 10];
+                    case 4: return [3 /*break*/, 10];
+                    case 5: return [3 /*break*/, 12];
+                    case 6: return [3 /*break*/, 14];
                 }
-                return [3 /*break*/, 12];
+                return [3 /*break*/, 16];
             case 3:
                 {
                     mostrar(plantas, extractos);
-                    return [3 /*break*/, 12];
+                    return [3 /*break*/, 16];
                 }
                 _b.label = 4;
             case 4: return [4 /*yield*/, Añadir(_user, plantas, extractos)];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 12];
+                return [3 /*break*/, 16];
             case 6: return [4 /*yield*/, Eliminar(_user, plantas, extractos)];
             case 7:
                 _b.sent();
-                return [3 /*break*/, 12];
+                return [3 /*break*/, 16];
             case 8: return [4 /*yield*/, ver(_user, plantas, extractos)];
             case 9:
                 _b.sent();
-                return [3 /*break*/, 12];
-            case 10: return [4 /*yield*/, finalizar(_user, plantas, extractos)];
+                return [3 /*break*/, 16];
+            case 10: return [4 /*yield*/, Espera(_user)];
             case 11:
                 _b.sent();
-                _b.label = 12;
-            case 12: return [4 /*yield*/, options(_user)];
+                return [3 /*break*/, 16];
+            case 12: return [4 /*yield*/, verPedidos(_user, plantas, extractos)];
             case 13:
+                _b.sent();
+                return [3 /*break*/, 16];
+            case 14: return [4 /*yield*/, finalizar(_user)];
+            case 15:
+                _b.sent();
+                return [3 /*break*/, 16];
+            case 16: return [4 /*yield*/, options(_user)];
+            case 17:
                 _b.sent();
                 return [2 /*return*/];
         }
@@ -259,7 +269,53 @@ var Eliminar = function (_user, plantas, extractos) { return __awaiter(void 0, v
         }
     });
 }); };
-var finalizar = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+var verPedidos = function (_user, plantas, extractos) { return __awaiter(void 0, void 0, void 0, function () {
+    var i, pedidosQuery, pedidos, _i, pedidosQuery_1, pedido, _a, pedidos_2, pedido;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                console.clear();
+                i = 1;
+                return [4 /*yield*/, pedidos_1.pedidoModel.find({ cliente: _user._id })];
+            case 1:
+                pedidosQuery = _b.sent();
+                pedidos = [];
+                for (_i = 0, pedidosQuery_1 = pedidosQuery; _i < pedidosQuery_1.length; _i++) {
+                    pedido = pedidosQuery_1[_i];
+                    pedidos.push(new pedidos_1.Pedidos(pedido.pedidos, pedido.gramos, pedido.fecha, pedido.cliente));
+                }
+                for (_a = 0, pedidos_2 = pedidos; _a < pedidos_2.length; _a++) {
+                    pedido = pedidos_2[_a];
+                    pedido.mostrar(plantas, extractos, i);
+                    i++;
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+var Espera = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
+    var pedidosQuery, pedidos, i, _i, pedidosQuery_2, pedido, _a, pedidos_3, pedido;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0: return [4 /*yield*/, pedidos_1.pedidoModel.find({ cliente: _user._id })];
+            case 1:
+                pedidosQuery = _b.sent();
+                pedidos = [];
+                i = 1;
+                for (_i = 0, pedidosQuery_2 = pedidosQuery; _i < pedidosQuery_2.length; _i++) {
+                    pedido = pedidosQuery_2[_i];
+                    pedidos.push(new pedidos_1.Pedidos(pedido.pedidos, pedido.gramos, pedido.cliente, pedido.fecha));
+                }
+                for (_a = 0, pedidos_3 = pedidos; _a < pedidos_3.length; _a++) {
+                    pedido = pedidos_3[_a];
+                    pedido.tiempo(i);
+                    i++;
+                }
+                return [2 /*return*/];
+        }
+    });
+}); };
+var finalizar = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
     var pedidos, gramos, id, pedido, pedidoSaver;
     return __generator(this, function (_a) {
         if (_user.pedidos.length === 0) {

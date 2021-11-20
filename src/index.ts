@@ -119,8 +119,19 @@ const options = async (_user: Cliente) => {
 			break;
 		}
 
+		case 4:{
+			await Espera(_user)
+			break;
+		}
+
+		case 5:{
+			await verPedidos(_user, plantas, extractos)
+			break;
+		}
+
 		case 6: {
-			await finalizar(_user , plantas , extractos)
+			await finalizar(_user )
+			break;
 		}
 	}
 	await options(_user);
@@ -190,7 +201,35 @@ const Eliminar = async(_user:Cliente , plantas : Plantas[] , extractos : Extract
 	}
 }
 
-const finalizar = async(_user:Cliente , plantas : Plantas[] , extractos : Extracto[]) => {
+const verPedidos  = async (_user:Cliente ,plantas: Plantas[] , extractos: Extracto[]) => {
+	console.clear()
+	let i = 1
+	let pedidosQuery : any = await pedidoModel.find({cliente:_user._id})
+	let pedidos : Array<Pedidos> = []
+	for (let pedido of pedidosQuery){
+		pedidos.push(new Pedidos(pedido.pedidos , pedido.gramos ,pedido.fecha , pedido.cliente ))
+	}
+	for (let pedido of pedidos){
+		pedido.mostrar(plantas , extractos , i)
+		i++
+	}
+}
+
+const Espera = async (_user:Cliente) => {
+	let pedidosQuery : any = await pedidoModel.find({cliente:_user._id})
+	let pedidos : Array<Pedidos> = []
+	let i = 1
+	for (let pedido of pedidosQuery){
+		pedidos.push(new Pedidos(pedido.pedidos , pedido.gramos , pedido.cliente , pedido.fecha))
+	}
+	
+	for (let pedido of pedidos){
+		pedido.tiempo(i)
+		i++
+	}
+}
+
+const finalizar = async(_user:Cliente) => {
 	if (_user.pedidos.length === 0){
 		console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito')
 	}else{
@@ -204,5 +243,6 @@ const finalizar = async(_user:Cliente , plantas : Plantas[] , extractos : Extrac
 		}
 	}
 }
+
 
 main();
