@@ -144,40 +144,46 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                     case 4: return [3 /*break*/, 10];
                     case 5: return [3 /*break*/, 12];
                     case 6: return [3 /*break*/, 14];
+                    case 7: return [3 /*break*/, 16];
                 }
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 3:
                 {
                     mostrar(plantas, extractos);
-                    return [3 /*break*/, 16];
+                    return [3 /*break*/, 17];
                 }
                 _b.label = 4;
             case 4: return [4 /*yield*/, Añadir(_user, plantas, extractos)];
             case 5:
                 _b.sent();
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 6: return [4 /*yield*/, Eliminar(_user, plantas, extractos)];
             case 7:
                 _b.sent();
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 8: return [4 /*yield*/, ver(_user, plantas, extractos)];
             case 9:
                 _b.sent();
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 10: return [4 /*yield*/, Espera(_user)];
             case 11:
                 _b.sent();
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 12: return [4 /*yield*/, verPedidos(_user, plantas, extractos)];
             case 13:
                 _b.sent();
-                return [3 /*break*/, 16];
+                return [3 /*break*/, 17];
             case 14: return [4 /*yield*/, finalizar(_user)];
             case 15:
                 _b.sent();
-                return [3 /*break*/, 16];
-            case 16: return [4 /*yield*/, options(_user)];
-            case 17:
+                return [3 /*break*/, 17];
+            case 16:
+                {
+                    isOn(_user);
+                }
+                _b.label = 17;
+            case 17: return [4 /*yield*/, options(_user)];
+            case 18:
                 _b.sent();
                 return [2 /*return*/];
         }

@@ -133,6 +133,10 @@ const options = async (_user: Cliente) => {
 			await finalizar(_user )
 			break;
 		}
+
+		case 7: {
+			isOn(_user)
+		}
 	}
 	await options(_user);
 };
