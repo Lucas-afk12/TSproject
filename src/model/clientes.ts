@@ -1,5 +1,6 @@
 import { Schema, model, createConnection } from 'mongoose';
-import { Plantas, Extracto } from './productos';
+import { Extracto } from './extractos';
+import { Plantas } from './productos';
 const autoIncrement = require('mongoose-auto-increment');
 
 const connection = createConnection(
@@ -19,6 +20,7 @@ export class Cliente {
 	private _gramos: Array<number> = [];
 	private _recibo: Boolean;
 	private _status: Boolean;
+	type: string;
 
 	constructor(
 		_nombre: string,
@@ -42,6 +44,7 @@ export class Cliente {
 		this._gramos = _gramos;
 		this._recibo = _recibo;
 		this._status = _status;
+		this.type = 'C';
 	}
 
 	get Contraseña() {
@@ -60,15 +63,15 @@ export class Cliente {
 		return this._gramos;
 	}
 
-	set addpedido(data:number) {
+	set addpedido(data: number) {
 		this._pedidos.push(data);
 	}
 
-	set changepedido(data: Array<number>){
-		this._pedidos = data
+	set changepedido(data: Array<number>) {
+		this._pedidos = data;
 	}
 
-	set addgrams(data : number) {
+	set addgrams(data: number) {
 		this._gramos.push(data);
 	}
 
@@ -80,28 +83,39 @@ export class Cliente {
 		let x = 0;
 		let total = 0;
 
-		if (pedidos.length !== 0){
-		let gram = gramos.reduce((a, b) => a + b);
+		if (pedidos.length !== 0) {
+			let gram = gramos.reduce((a, b) => a + b);
 
-		for (let pedido of pedidos) {
-			let temp: Plantas | undefined= (plantas.find((planta) => planta.id == pedido))
-			if (temp !== undefined) {
-				console.log(`${x}.- ${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`)
-				total = temp.totalprice(gramos[x]) + total
-			
-			} else {
-				let temp: Extracto |undefined = extractos.find((extracto) => extracto.id == pedido);
+			for (let pedido of pedidos) {
+				let temp: Plantas | undefined = plantas.find(
+					(planta) => planta.id == pedido
+				);
 				if (temp !== undefined) {
-					console.log(`${x}.- ${gramos[x]} gramos de ${temp.NombreProducto} por un precio total de ${temp.totalprice(gramos[x])}€`);
-				total = temp.totalprice(gramos[x]) + total;
+					console.log(
+						`${x}.- ${gramos[x]} gramos de ${
+							temp.NombreProducto
+						} por un precio total de ${temp.totalprice(gramos[x])}€`
+					);
+					total = temp.totalprice(gramos[x]) + total;
+				} else {
+					let temp: Extracto | undefined = extractos.find(
+						(extracto) => extracto.id == pedido
+					);
+					if (temp !== undefined) {
+						console.log(
+							`${x}.- ${gramos[x]} gramos de ${
+								temp.NombreProducto
+							} por un precio total de ${temp.totalprice(gramos[x])}€`
+						);
+						total = temp.totalprice(gramos[x]) + total;
+					}
 				}
+				x++;
 			}
-			x++;
-		}
-		console.log(`un total de ${gram} gramos por ${total}€`);
-		}else{
-			console.log("el carrito esta vacio")
-			return false
+			console.log(`un total de ${gram} gramos por ${total}€`);
+		} else {
+			console.log('el carrito esta vacio');
+			return false;
 		}
 	}
 
@@ -221,6 +235,7 @@ export interface tCliente {
 autoIncrement.initialize(connection);
 
 export const ClienteSchema = new Schema({
+	_id: { type: String },
 	_nombre: { type: String, unique: true },
 	_apellidos: { type: String },
 	_dni: { type: String },
@@ -228,11 +243,101 @@ export const ClienteSchema = new Schema({
 	_Contraseña: { type: String },
 	_pedidos: { type: Array },
 	_gramos: { type: Array },
+	numEmpresa: { type: String },
 	_recibo: { type: Boolean },
 	_status: { type: Boolean },
+	type: { type: String },
 });
 
-//Exportamos el esquema aplicando el plugin
+export class Mayoristas extends Cliente {
+	private numEmpresa: string;
+	type: string;
+
+	constructor(
+		_nombre: string,
+		_apellido: string,
+		_dni: string,
+		_nombreUsuario: string,
+		_Contraseña: string,
+		_pedidos: Array<number>,
+		_gramos: number[],
+		_recibo: boolean,
+		_status: boolean,
+		numEmpresa: string,
+		id?: number
+	) {
+		super(
+			_nombre,
+			_apellido,
+			_dni,
+			_nombreUsuario,
+			_Contraseña,
+			_pedidos,
+			_gramos,
+			_recibo,
+			_status,
+			id
+		);
+
+		this.numEmpresa = numEmpresa;
+		this.type = 'M';
+	}
+
+	create(
+		_nombre: string,
+		_apellido: string,
+		_dni: string,
+		_nombreUsuario: string,
+		_Contraseña: string,
+		_pedidos: number[],
+		_gramos: number[],
+		_recibo: boolean,
+		_status: boolean,
+		numEmpresa: string,
+		id?: number
+	) {
+		if (id == undefined) {
+			return new Mayoristas(
+				_nombre,
+				_apellido,
+				_dni,
+				_nombreUsuario,
+				_Contraseña,
+				_pedidos,
+				_gramos,
+				_recibo,
+				_status,
+				numEmpresa
+			);
+		}
+		return new Mayoristas(
+			_nombre,
+			_apellido,
+			_dni,
+			_nombreUsuario,
+			_Contraseña,
+			_pedidos,
+			_gramos,
+			_recibo,
+			_status,
+			numEmpresa,
+			id
+		);
+	}
+}
+
+export const MayoristFunc = new Mayoristas(
+	'',
+	'',
+	'',
+	'',
+	'',
+	[],
+	[],
+	false,
+	false,
+	''
+);
 ClienteSchema.plugin(autoIncrement.plugin, 'Cliente');
 export const clientModel: Cliente | any = connection.model<Cliente>(
 	'cliente',

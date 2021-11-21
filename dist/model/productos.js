@@ -51,7 +51,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.plantModel = exports.ExtractModel = exports.ExtractFunc = exports.Extracto = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
+exports.plantModel = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
 var mongoose_1 = require("mongoose");
 var autoIncrement = require("mongoose-auto-increment");
 var connection = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
@@ -179,6 +179,14 @@ var Plantas = /** @class */ (function (_super) {
     Plantas.prototype.mostrar = function () {
         console.log(this.id + ".-" + this.NombreProducto + " , precioG= " + this._precio + "\u20AC , stock= " + this._stock + " , genetica= " + this.tipo + " , " + this.Predominancia + " ,  Fecha = " + this.cosecha);
     };
+    Plantas.prototype.totalprice = function (gramos) {
+        if (this.Apta_para_extracto) {
+            return ((this._precio * gramos) * 1.25);
+        }
+        else {
+            return this._precio * gramos;
+        }
+    };
     return Plantas;
 }(Productos));
 exports.Plantas = Plantas;
@@ -189,53 +197,6 @@ var genetica = {
 };
 exports.plantFunc = new Plantas("", 0, 0, "", false, 0, genetica, 0, false, new Date());
 //subclase de extracto
-var Extracto = /** @class */ (function (_super) {
-    __extends(Extracto, _super);
-    function Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
-        var _this = _super.call(this, Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) || this;
-        _this.N_apaleo = N_apaleo;
-        _this.mutable = mutable;
-        _this.variedad = variedad;
-        return _this;
-    }
-    Object.defineProperty(Extracto.prototype, "_mutable", {
-        get: function () {
-            return this.mutable;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Extracto.prototype, "apaleo", {
-        get: function () {
-            return this.N_apaleo;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(Extracto.prototype, "_variedad", {
-        get: function () {
-            return this.variedad;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Extracto.prototype.creator = function (Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type) {
-        if (id_p == undefined) {
-            return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad);
-        }
-        else {
-            return new Extracto(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, N_apaleo, mutable, variedad, id_p, type);
-        }
-    };
-    Extracto.prototype.mostrar = function () {
-        console.log(this.id + ".-" + this.NombreProducto + " , varieda=" + this._variedad + " , precioG= " + this._precio + "\u20AC , Potencia ={thc = " + this.thc + "% , cbd= " + this.cbd + "%} , mutable= " + this._mutable + " , N_apaleo= " + this.apaleo + " , stock= " + this._stock + " ,  Fecha = " + this.cosecha);
-    };
-    return Extracto;
-}(Productos));
-exports.Extracto = Extracto;
-//objeto vacio
-exports.ExtractFunc = new Extracto("", 0, 0, "", false, 0, new Date(), 0, false, "");
-//esquemas
 var PlantaSchema = new mongoose_1.Schema({
     Nombre: { type: String },
     precio: { type: Number },
@@ -253,24 +214,8 @@ var PlantaSchema = new mongoose_1.Schema({
     id_p: { type: Number },
     type: { type: String },
 });
-var Extractoschema = new mongoose_1.Schema({
-    Nombre: { type: String },
-    precio: { type: Number },
-    thc: { type: Number },
-    cbd: { type: String },
-    cosecha: { type: Date },
-    stock: { type: Boolean },
-    cod_proveedor: { type: Number },
-    N_apaleo: { type: Number },
-    mutable: { type: Boolean },
-    variedad: { type: String },
-    id_p: { type: Number },
-    type: { type: String },
-});
 //plugin
 autoIncrement.initialize(connection);
 PlantaSchema.plugin(autoIncrement.plugin, { model: "Plantas", field: "id_p" });
-Extractoschema.plugin(autoIncrement.plugin, { model: "Extracto", field: "id_p" });
 //modelos
-exports.ExtractModel = connectio.model("productos", Extractoschema);
 exports.plantModel = connection.model("productos", PlantaSchema);

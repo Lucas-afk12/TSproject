@@ -1,4 +1,19 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,7 +51,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clientModel = exports.ClienteSchema = exports.ClientFunc = exports.Cliente = void 0;
+exports.clientModel = exports.MayoristFunc = exports.Mayoristas = exports.ClienteSchema = exports.ClientFunc = exports.Cliente = void 0;
 var mongoose_1 = require("mongoose");
 var autoIncrement = require('mongoose-auto-increment');
 var connection = (0, mongoose_1.createConnection)('mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
@@ -55,6 +70,7 @@ var Cliente = /** @class */ (function () {
         this._gramos = _gramos;
         this._recibo = _recibo;
         this._status = _status;
+        this.type = 'C';
     }
     Object.defineProperty(Cliente.prototype, "Contrase\u00F1a", {
         get: function () {
@@ -114,7 +130,7 @@ var Cliente = /** @class */ (function () {
         if (pedidos.length !== 0) {
             var gram = gramos.reduce(function (a, b) { return a + b; });
             var _loop_1 = function (pedido) {
-                var temp = (plantas.find(function (planta) { return planta.id == pedido; }));
+                var temp = plantas.find(function (planta) { return planta.id == pedido; });
                 if (temp !== undefined) {
                     console.log(x + ".- " + gramos[x] + " gramos de " + temp.NombreProducto + " por un precio total de " + temp.totalprice(gramos[x]) + "\u20AC");
                     total = temp.totalprice(gramos[x]) + total;
@@ -135,7 +151,7 @@ var Cliente = /** @class */ (function () {
             console.log("un total de " + gram + " gramos por " + total + "\u20AC");
         }
         else {
-            console.log("el carrito esta vacio");
+            console.log('el carrito esta vacio');
             return false;
         }
     };
@@ -240,6 +256,7 @@ exports.ClientFunc = new Cliente('', '', '', '', '', [], [], false, false);
 //Al crear la conexion inizializamos el plugin para tener id autoincrementables
 autoIncrement.initialize(connection);
 exports.ClienteSchema = new mongoose_1.Schema({
+    _id: { type: String },
     _nombre: { type: String, unique: true },
     _apellidos: { type: String },
     _dni: { type: String },
@@ -247,9 +264,28 @@ exports.ClienteSchema = new mongoose_1.Schema({
     _Contraseña: { type: String },
     _pedidos: { type: Array },
     _gramos: { type: Array },
+    numEmpresa: { type: String },
     _recibo: { type: Boolean },
     _status: { type: Boolean },
+    type: { type: String },
 });
-//Exportamos el esquema aplicando el plugin
+var Mayoristas = /** @class */ (function (_super) {
+    __extends(Mayoristas, _super);
+    function Mayoristas(_nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, numEmpresa, id) {
+        var _this = _super.call(this, _nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, id) || this;
+        _this.numEmpresa = numEmpresa;
+        _this.type = 'M';
+        return _this;
+    }
+    Mayoristas.prototype.create = function (_nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, numEmpresa, id) {
+        if (id == undefined) {
+            return new Mayoristas(_nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, numEmpresa);
+        }
+        return new Mayoristas(_nombre, _apellido, _dni, _nombreUsuario, _Contraseña, _pedidos, _gramos, _recibo, _status, numEmpresa, id);
+    };
+    return Mayoristas;
+}(Cliente));
+exports.Mayoristas = Mayoristas;
+exports.MayoristFunc = new Mayoristas('', '', '', '', '', [], [], false, false, '');
 exports.ClienteSchema.plugin(autoIncrement.plugin, 'Cliente');
 exports.clientModel = connection.model('cliente', exports.ClienteSchema);

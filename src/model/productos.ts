@@ -10,9 +10,9 @@ const connectio = createConnection(
 //Productos
 
 export class Productos {
-  protected id_p?: number;
-  protected Nombre: string;
-  protected precio: number;
+  private id_p?: number;
+  private Nombre: string;
+  private precio: number;
   protected thc: number;
   protected cbd: string;
   protected stock: boolean;
@@ -177,6 +177,13 @@ export class Plantas extends Productos {
     `${this.id}.-${this.NombreProducto} , precioG= ${this._precio}€ , stock= ${this._stock} , genetica= ${this.tipo} , ${this.Predominancia} ,  Fecha = ${this.cosecha}`
   );
 }
+totalprice(gramos: number){
+  if(this.Apta_para_extracto){
+return ((this._precio * gramos)*1.25)
+  }else{
+return this._precio * gramos
+  }
+}
 }
 
 // Objeto vacio para ejecutar funciones.
@@ -201,111 +208,6 @@ export const plantFunc = new Plantas(
 
 //subclase de extracto
 
-export class Extracto extends Productos {
-  private N_apaleo: number;
-  private mutable: boolean;
-  private variedad: string;
-
-  constructor(
-    Nombre: string,
-    precio: number,
-    thc: number,
-    cbd: string,
-    stock: boolean,
-    cod_proveedor: number,
-    Cosecha: Date,
-    N_apaleo: number,
-    mutable: boolean,
-    variedad: string,
-    id_p?: number,
-    type?: string
-  ) {
-    super(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p);
-    this.N_apaleo = N_apaleo;
-    this.mutable = mutable;
-    this.variedad = variedad;
-  }
-
-  get _mutable(){
-    return this.mutable
-  }
-
-  get apaleo() {
-    return this.N_apaleo
-  }
-
-  get _variedad(){
-    return this.variedad
-  }
-
-  creator(
-    Nombre: string,
-    precio: number,
-    thc: number,
-    cbd: string,
-    stock: boolean,
-    cod_proveedor: number,
-    Cosecha: Date,
-    N_apaleo: number,
-    mutable: boolean,
-    variedad: string,
-    id_p?: number,
-    type?: string
-  ) {
-    if (id_p == undefined) {
-      return new Extracto(
-        Nombre,
-        precio,
-        thc,
-        cbd,
-        stock,
-        cod_proveedor,
-        Cosecha,
-        N_apaleo,
-        mutable,
-        variedad
-      );
-    } else {
-      return new Extracto(
-        Nombre,
-        precio,
-        thc,
-        cbd,
-        stock,
-        cod_proveedor,
-        Cosecha,
-        N_apaleo,
-        mutable,
-        variedad,
-        id_p,
-        type
-      );
-    }
-  }
-  mostrar(){
-    console.log(
-      `${this.id}.-${this.NombreProducto} , varieda=${this._variedad} , precioG= ${this._precio}€ , Potencia ={thc = ${this.thc}% , cbd= ${this.cbd}%} , mutable= ${this._mutable} , N_apaleo= ${this.apaleo} , stock= ${this._stock} ,  Fecha = ${this.cosecha}`
-    );
-  }
-}
-
-//objeto vacio
-
-export const ExtractFunc = new Extracto(
-  "",
-  0,
-  0,
-  "",
-  false,
-  0,
-  new Date(),
-  0,
-  false,
-  ""
-);
-
-//esquemas
-
 const PlantaSchema = new Schema({
   Nombre: { type: String },
   precio: { type: Number },
@@ -324,34 +226,13 @@ const PlantaSchema = new Schema({
   type: { type: String },
 });
 
-const Extractoschema = new Schema({
-  Nombre: { type: String },
-  precio: { type: Number },
-  thc: { type: Number },
-  cbd: { type: String },
-  cosecha: { type: Date },
-  stock: { type: Boolean },
-  cod_proveedor: { type: Number },
-  N_apaleo: { type: Number },
-  mutable: { type: Boolean },
-  variedad: { type: String },
-  id_p: { type: Number },
-  type: { type: String },
-});
-
 //plugin
 
 autoIncrement.initialize(connection);
 
 PlantaSchema.plugin(autoIncrement.plugin, {model:"Plantas" , field:"id_p"});
-Extractoschema.plugin(autoIncrement.plugin, {model:"Extracto" , field:"id_p"});
 
 //modelos
-
-export const ExtractModel: Plantas | any = connectio.model<Extracto>(
-  "productos",
-  Extractoschema
-);
 
 export const plantModel: Plantas | any = connection.model<Plantas>(
   "productos",

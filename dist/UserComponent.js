@@ -79,73 +79,140 @@ var userMenu = function () { return __awaiter(void 0, void 0, void 0, function (
 }); };
 exports.userMenu = userMenu;
 var UserCreator = function (Errores) { return __awaiter(void 0, void 0, void 0, function () {
-    var errorsend, user, contraseña, nombre, apellidos, dni, pedidos, gramos, recibo, status, reciboChek, cliente, errors, saver, err_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var errorsend, type, _a, user, contraseña, nombre, apellidos, dni, pedidos, gramos, recibo, status_1, reciboChek, cliente, errors, saver, err_1, user, contraseña, nombre, apellidos, dni, empresa, pedidos, gramos, recibo, status_2, reciboChek, Mayoristas_1, errors, saver, err_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 console.clear();
                 errorsend = [];
                 if (Errores != undefined) {
                     console.log(Errores);
                 }
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su nombre de usuario')];
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('si quiere crear una cuenta de usuario introduzca U  o una cuenta de mayorista introduzca M')];
             case 1:
-                user = _a.sent();
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su contraseña')];
-            case 2:
-                contraseña = _a.sent();
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introduzca su nombre')];
+                type = _b.sent();
+                _a = type;
+                switch (_a) {
+                    case 'U': return [3 /*break*/, 2];
+                    case 'M': return [3 /*break*/, 17];
+                }
+                return [3 /*break*/, 33];
+            case 2: return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su nombre de usuario')];
             case 3:
-                nombre = _a.sent();
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Apellidos')];
+                user = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su contraseña')];
             case 4:
-                apellidos = _a.sent();
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('dni')];
+                contraseña = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introduzca su nombre')];
             case 5:
-                dni = _a.sent();
+                nombre = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Apellidos')];
+            case 6:
+                apellidos = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('dni')];
+            case 7:
+                dni = _b.sent();
                 pedidos = [];
                 gramos = [];
                 return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('¿quiere recicibir ticket de sus compras?(s/n)')];
-            case 6:
-                recibo = _a.sent();
-                status = false;
+            case 8:
+                recibo = _b.sent();
+                status_1 = false;
                 reciboChek = false;
                 if (recibo == 's') {
                     reciboChek = true;
                 }
-                _a.label = 7;
-            case 7:
-                _a.trys.push([7, 13, , 14]);
-                cliente = clientes_1.ClientFunc.creator(nombre, apellidos, dni, user, contraseña, pedidos, gramos, reciboChek, status);
+                _b.label = 9;
+            case 9:
+                _b.trys.push([9, 15, , 16]);
+                cliente = clientes_1.ClientFunc.creator(nombre, apellidos, dni, user, contraseña, pedidos, gramos, reciboChek, status_1);
                 return [4 /*yield*/, cliente.errorchecker()];
-            case 8:
-                errors = _a.sent();
-                if (!(errors.length === 0)) return [3 /*break*/, 10];
+            case 10:
+                errors = _b.sent();
+                if (!(errors.length === 0)) return [3 /*break*/, 12];
                 saver = new clientes_1.clientModel(cliente);
                 return [4 /*yield*/, saver.save()];
-            case 9:
-                _a.sent(),
+            case 11:
+                _b.sent(),
                     function (err) {
                         errorsend.push('Ha ocurrido un error guardando el cliente');
                     };
-                return [3 /*break*/, 12];
-            case 10:
+                return [3 /*break*/, 14];
+            case 12:
                 errorsend = errors;
                 return [4 /*yield*/, UserCreator(errorsend)];
-            case 11:
-                _a.sent();
-                _a.label = 12;
-            case 12: return [3 /*break*/, 14];
             case 13:
-                err_1 = _a.sent();
+                _b.sent();
+                _b.label = 14;
+            case 14: return [3 /*break*/, 16];
+            case 15:
+                err_1 = _b.sent();
                 errorsend.push('Ha ocurrido un error inesperado');
-                return [3 /*break*/, 14];
-            case 14: return [2 /*return*/];
+                return [3 /*break*/, 16];
+            case 16: return [3 /*break*/, 34];
+            case 17: return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su nombre de usuario')];
+            case 18:
+                user = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su contraseña')];
+            case 19:
+                contraseña = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introduzca el nombre del titular de la empresa')];
+            case 20:
+                nombre = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introduzca los Apellidos del titular de la empresa')];
+            case 21:
+                apellidos = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introudzca el dni del titular de la empresa')];
+            case 22:
+                dni = _b.sent();
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su codigo de empresa')];
+            case 23:
+                empresa = _b.sent();
+                pedidos = [];
+                gramos = [];
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('¿quiere recicibir ticket de sus compras?(s/n)')];
+            case 24:
+                recibo = _b.sent();
+                status_2 = false;
+                reciboChek = false;
+                if (recibo == 's') {
+                    reciboChek = true;
+                }
+                _b.label = 25;
+            case 25:
+                _b.trys.push([25, 31, , 32]);
+                Mayoristas_1 = clientes_1.MayoristFunc.create(nombre, apellidos, dni, user, contraseña, pedidos, gramos, reciboChek, status_2, empresa);
+                return [4 /*yield*/, Mayoristas_1.errorchecker()];
+            case 26:
+                errors = _b.sent();
+                if (!(errors.length === 0)) return [3 /*break*/, 28];
+                saver = new clientes_1.clientModel(Mayoristas_1);
+                return [4 /*yield*/, saver.save()];
+            case 27:
+                _b.sent(),
+                    function (err) {
+                        errorsend.push('Ha ocurrido un error guardando el cliente');
+                    };
+                return [3 /*break*/, 30];
+            case 28:
+                errorsend = errors;
+                return [4 /*yield*/, UserCreator(errorsend)];
+            case 29:
+                _b.sent();
+                _b.label = 30;
+            case 30: return [3 /*break*/, 32];
+            case 31:
+                err_2 = _b.sent();
+                errorsend.push('Ha ocurrido un error inesperado');
+                return [3 /*break*/, 32];
+            case 32: return [3 /*break*/, 34];
+            case 33: return [3 /*break*/, 34];
+            case 34: return [2 /*return*/];
         }
     });
 }); };
 var userLogin = function (errors) { return __awaiter(void 0, void 0, void 0, function () {
-    var error, user, contraseña, userQuery, usuario;
+    var error, user, contraseña, userQuery, usuario, user_1, user_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -160,11 +227,21 @@ var userLogin = function (errors) { return __awaiter(void 0, void 0, void 0, fun
                 return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('Introduzca su contraseña')];
             case 2:
                 contraseña = _a.sent();
-                return [4 /*yield*/, clientes_1.clientModel.findOne({ _nombreUsuario: user })];
+                return [4 /*yield*/, clientes_1.clientModel.findOne({
+                        _nombreUsuario: user,
+                    })];
             case 3:
                 userQuery = _a.sent();
                 if (!(userQuery != null)) return [3 /*break*/, 9];
-                usuario = clientes_1.ClientFunc.creator(userQuery._nombre, userQuery._apellidos, userQuery._dni, userQuery._nombreUsuario, userQuery._Contraseña, userQuery._pedidos, userQuery._gramos, userQuery._recibo, userQuery._status, userQuery._id);
+                usuario = void 0;
+                if (userQuery.type == 'C') {
+                    user_1 = clientes_1.ClientFunc.creator(userQuery._nombre, userQuery._apellidos, userQuery._dni, userQuery._nombreUsuario, userQuery._Contraseña, userQuery._pedidos, userQuery._gramos, userQuery._recibo, userQuery._status, userQuery._id);
+                    usuario = user_1;
+                }
+                else {
+                    user_2 = clientes_1.MayoristFunc.create(userQuery._nombre, userQuery._apellidos, userQuery._dni, userQuery._nombreUsuario, userQuery._Contraseña, userQuery._pedidos, userQuery._gramos, userQuery._recibo, userQuery._status, userQuery.numEmpresa, userQuery._id);
+                    usuario = user_2;
+                }
                 if (!(usuario.Contraseña == contraseña)) return [3 /*break*/, 6];
                 return [4 /*yield*/, clientes_1.clientModel.updateOne({ _id: usuario._id }, { $set: { _status: true } })];
             case 4:

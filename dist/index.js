@@ -43,6 +43,7 @@ var menu_1 = require("./vistas/menu");
 var productos_1 = require("./model/productos");
 var lecturaTeclado_1 = require("./vistas/lecturaTeclado");
 var pedidos_1 = require("./model/pedidos");
+var extractos_1 = require("./model/extractos");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var user_conected;
     return __generator(this, function (_a) {
@@ -124,7 +125,7 @@ var options = function (_user) { return __awaiter(void 0, void 0, void 0, functi
                                         plantas.push(temp);
                                     }
                                     if (Product.type == 'e') {
-                                        temp = productos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.cosecha, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p, Product.type);
+                                        temp = extractos_1.ExtractFunc.creator(Product.Nombre, Product.precio, Product.thc, Product.cbd, Product.stock, Product.cod_proveedor, Product.cosecha, Product.N_apaleo, Product.mutable, Product.variedad, Product.id_p, Product.type);
                                         extractos.push(temp);
                                     }
                                 }
@@ -197,8 +198,8 @@ var mostrar = function (plantas, extractos) {
     }
     console.log('\n');
     console.log('lista de extractos:');
-    for (var _a = 0, extractos_1 = extractos; _a < extractos_1.length; _a++) {
-        var extracto = extractos_1[_a];
+    for (var _a = 0, extractos_2 = extractos; _a < extractos_2.length; _a++) {
+        var extracto = extractos_2[_a];
         extracto.mostrar();
     }
 };
@@ -323,6 +324,9 @@ var Espera = function (_user) { return __awaiter(void 0, void 0, void 0, functio
 var finalizar = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
     var pedidos, gramos, id, pedido, pedidoSaver;
     return __generator(this, function (_a) {
+        if (_user.pedidos.length < 5) {
+            console.log("al ser una cuenta de empresa tienes que comprar un minimo de 5 productos");
+        }
         if (_user.pedidos.length === 0) {
             console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito');
         }
@@ -334,6 +338,7 @@ var finalizar = function (_user) { return __awaiter(void 0, void 0, void 0, func
                 pedido = new pedidos_1.Pedidos(pedidos, gramos, id);
                 pedidoSaver = new pedidos_1.pedidoModel(pedido);
                 pedidoSaver.save();
+                _user.changepedido = [];
             }
         }
         return [2 /*return*/];

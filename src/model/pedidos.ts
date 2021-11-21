@@ -1,5 +1,7 @@
 import { Schema, model, createConnection } from 'mongoose';
-import { Extracto, Plantas } from './productos';
+import { Cliente, Mayoristas } from './clientes';
+import { Extracto } from './extractos';
+import {  Plantas } from './productos';
 const connection=createConnection('mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 );
 const autoIncrement = require('mongoose-auto-increment');

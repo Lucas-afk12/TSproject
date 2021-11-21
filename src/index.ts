@@ -4,12 +4,11 @@ import { sessionMenu, UserActive } from './vistas/menu';
 import {
 	Plantas,
 	plantFunc,
-	Extracto,
-	ExtractFunc,
 	plantModel,
 } from './model/productos';
 import { leerTeclado } from './vistas/lecturaTeclado';
 import { Pedidos , pedidoModel} from './model/pedidos';
+import { ExtractFunc, Extracto } from './model/extractos';
 
 export const main = async () => {
 	let user_conected: tCliente | boolean = await ClientFunc.conected();
@@ -215,7 +214,7 @@ const verPedidos  = async (_user:Cliente ,plantas: Plantas[] , extractos: Extrac
 		pedidos.push(new Pedidos(pedido.pedidos , pedido.gramos ,pedido.fecha , pedido.cliente ))
 	}
 	for (let pedido of pedidos){
-		pedido.mostrar(plantas , extractos , i)
+		pedido.mostrar(plantas , extractos , i )
 		i++
 	}
 }
@@ -235,6 +234,9 @@ const Espera = async (_user:Cliente) => {
 }
 
 const finalizar = async(_user:Cliente) => {
+	if (_user.pedidos.length < 5 ){
+		console.log("al ser una cuenta de empresa tienes que comprar un minimo de 5 productos")
+	}
 	if (_user.pedidos.length === 0){
 		console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito')
 	}else{
@@ -245,8 +247,10 @@ const finalizar = async(_user:Cliente) => {
 		let pedido = new Pedidos(pedidos,gramos,id)
 		let pedidoSaver = new pedidoModel(pedido)
 		pedidoSaver.save()
+		_user.changepedido = []
 		}
 	}
+
 }
 
 
