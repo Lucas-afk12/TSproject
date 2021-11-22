@@ -3,12 +3,10 @@ import {
 	clientModel,
 	tCliente,
 	ClientFunc,
-	MayoristFunc,
-	Mayoristas,
 } from './model/clientes';
 import { menuLogin } from './vistas/menu';
 import { leerTeclado } from './vistas/lecturaTeclado';
-import { db } from './database/database';
+import { Mayoristas , MayoristFunc} from './model/mayoristas';
 import { main } from './index';
 export const userMenu = async () => {
 	console.clear();

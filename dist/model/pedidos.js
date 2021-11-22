@@ -16,21 +16,21 @@ var Pedidos = /** @class */ (function () {
         }
         this.cliente = cliente;
     }
-    Pedidos.prototype.mostrar = function (plantas, extractos, number) {
+    Pedidos.prototype.mostrar = function (plantas, extractos, number, type) {
         var x = 0;
         var total = [];
         console.log("pedido " + number + ":");
         var _loop_1 = function (id) {
             var planta = plantas.find(function (a) { return a.id == id; });
             if (planta !== undefined) {
-                console.log("su pedido contiene " + this_1.gramos[x] + " de " + planta.NombreProducto + " por un precio de: " + planta.totalprice(this_1.gramos[x]) + "\u20AC");
-                total.push(planta.totalprice(this_1.gramos[x]));
+                console.log("su pedido contiene " + this_1.gramos[x] + " de " + planta.NombreProducto + " por un precio de: " + planta.totalprice(this_1.gramos[x], type) + "\u20AC");
+                total.push(planta.totalprice(this_1.gramos[x], type));
             }
             else {
                 var extracto = extractos.find(function (a) { return a.id == id; });
                 if (extracto !== undefined) {
-                    console.log("su pedido contiene " + this_1.gramos[x] + " de " + extracto.NombreProducto + " por un precio de: " + extracto.totalprice(this_1.gramos[x]) + "\u20AC");
-                    total.push(extracto.totalprice(this_1.gramos[x]));
+                    console.log("su pedido contiene " + this_1.gramos[x] + " de " + extracto.NombreProducto + " por un precio de: " + extracto.totalprice(this_1.gramos[x], type) + "\u20AC");
+                    total.push(extracto.totalprice(this_1.gramos[x], type));
                 }
             }
         };

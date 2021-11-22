@@ -1,6 +1,7 @@
 import { Schema, model, createConnection } from 'mongoose';
-import { Cliente, Mayoristas } from './clientes';
+import { Cliente } from './clientes';
 import { Extracto } from './extractos';
+import { Mayoristas } from './mayoristas';
 import {  Plantas } from './productos';
 const connection=createConnection('mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 );
@@ -11,6 +12,7 @@ export class Pedidos {
     private pedidos : number[]
     private gramos: number[]
     private fecha?: Date
+    private total :number
     private cliente: number
 
     constructor (pedidos : number[] , gramos: number[] , cliente: number , fecha?:Date){
@@ -26,27 +28,27 @@ export class Pedidos {
     }
 
 
-    mostrar(plantas: Array<Plantas> , extractos : Array<Extracto> , number: number){
-        let x=0
+    mostrar(plantas: Array<Plantas> , extractos : Array<Extracto> , number: number , type:string){
+        let x= 0
         let total = []
         console.log(`pedido ${number}:`)
         for (let id of this.pedidos){
             let planta : Plantas|undefined = plantas.find((a) => a.id == id);
             if (planta !== undefined){
-                console.log(`su pedido contiene ${this.gramos[x]} de ${planta.NombreProducto} por un precio de: ${planta.totalprice(this.gramos[x])}€`)
-                total.push(planta.totalprice(this.gramos[x]))
+                console.log(`su pedido contiene ${this.gramos[x]} de ${planta.NombreProducto} por un precio de: ${planta.totalprice(this.gramos[x],type)}€`)
+                total.push(planta.totalprice(this.gramos[x],type))
             }else{
                 let extracto : Extracto | undefined = extractos.find(a => a.id == id)
                 if (extracto !== undefined){
-                    console.log(`su pedido contiene ${this.gramos[x]} de ${extracto.NombreProducto} por un precio de: ${extracto.totalprice(this.gramos[x])}€`)
-                    total.push(extracto.totalprice(this.gramos[x]))
+                    console.log(`su pedido contiene ${this.gramos[x]} de ${extracto.NombreProducto} por un precio de: ${extracto.totalprice(this.gramos[x],type)}€`)
+                    total.push(extracto.totalprice(this.gramos[x],type))
                 }
             }
             
         }
         console.log(`precio total = ${total.reduce((a,b) => a+b)}€`)
     }
-
+  
     tiempo(number: number){
         let actualDate = new Date()
         if (this.fecha !== undefined){

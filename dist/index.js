@@ -44,6 +44,7 @@ var productos_1 = require("./model/productos");
 var lecturaTeclado_1 = require("./vistas/lecturaTeclado");
 var pedidos_1 = require("./model/pedidos");
 var extractos_1 = require("./model/extractos");
+var mayoristas_1 = require("./model/mayoristas");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var user_conected;
     return __generator(this, function (_a) {
@@ -69,16 +70,17 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
 }); };
 exports.main = main;
 var isOn = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
-    var client, n, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var client, n, _a, client, n, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
+                if (!(_user.type == 'C')) return [3 /*break*/, 7];
                 client = clientes_1.ClientFunc.creator(_user._nombre, _user._apellidos, _user._dni, _user._nombreUsuario, _user._Contraseña, _user._pedidos, _user._gramos, _user._recibo, _user._status, _user._id);
                 console.clear();
                 console.log(" tu usuario actual: " + client.username);
                 return [4 /*yield*/, (0, menu_1.sessionMenu)()];
             case 1:
-                n = _b.sent();
+                n = _c.sent();
                 _a = n;
                 switch (_a) {
                     case 's': return [3 /*break*/, 2];
@@ -86,16 +88,40 @@ var isOn = function (_user) { return __awaiter(void 0, void 0, void 0, function 
                 return [3 /*break*/, 4];
             case 2: return [4 /*yield*/, options(client)];
             case 3:
-                _b.sent();
-                _b.label = 4;
+                _c.sent();
+                _c.label = 4;
             case 4: return [4 /*yield*/, clientes_1.clientModel.updateOne({ _id: client._id }, { $set: { _status: false } })];
             case 5:
-                _b.sent();
+                _c.sent();
                 return [4 /*yield*/, (0, exports.main)()];
             case 6:
-                _b.sent();
-                _b.label = 7;
-            case 7: return [2 /*return*/];
+                _c.sent();
+                _c.label = 7;
+            case 7:
+                if (!(_user.type == 'M')) return [3 /*break*/, 14];
+                client = mayoristas_1.MayoristFunc.create(_user._nombre, _user._apellidos, _user._dni, _user._nombreUsuario, _user._Contraseña, _user._pedidos, _user._gramos, _user._recibo, _user._status, _user.numEmpresa, _user._id);
+                console.clear();
+                console.log(" tu usuario actual: " + client.username);
+                return [4 /*yield*/, (0, menu_1.sessionMenu)()];
+            case 8:
+                n = _c.sent();
+                _b = n;
+                switch (_b) {
+                    case 's': return [3 /*break*/, 9];
+                }
+                return [3 /*break*/, 11];
+            case 9: return [4 /*yield*/, options(client)];
+            case 10:
+                _c.sent();
+                _c.label = 11;
+            case 11: return [4 /*yield*/, clientes_1.clientModel.updateOne({ _id: client._id }, { $set: { _status: false } })];
+            case 12:
+                _c.sent();
+                return [4 /*yield*/, (0, exports.main)()];
+            case 13:
+                _c.sent();
+                _c.label = 14;
+            case 14: return [2 /*return*/];
         }
     });
 }); };
@@ -264,7 +290,7 @@ var Eliminar = function (_user, plantas, extractos) { return __awaiter(void 0, v
                 isEmpty = _user.verCarrito(plantas, extractos);
                 if (!(isEmpty !== false)) return [3 /*break*/, 2];
                 _a = parseInt;
-                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)("introduzca el numero de producto que quiere eliminar")];
+                return [4 /*yield*/, (0, lecturaTeclado_1.leerTeclado)('introduzca el numero de producto que quiere eliminar')];
             case 1:
                 remove = _a.apply(void 0, [_b.sent()]);
                 carrito = _user.pedidos;
@@ -292,7 +318,7 @@ var verPedidos = function (_user, plantas, extractos) { return __awaiter(void 0,
                 }
                 for (_a = 0, pedidos_2 = pedidos; _a < pedidos_2.length; _a++) {
                     pedido = pedidos_2[_a];
-                    pedido.mostrar(plantas, extractos, i);
+                    pedido.mostrar(plantas, extractos, i, _user.type);
                     i++;
                 }
                 return [2 /*return*/];
@@ -322,23 +348,42 @@ var Espera = function (_user) { return __awaiter(void 0, void 0, void 0, functio
     });
 }); };
 var finalizar = function (_user) { return __awaiter(void 0, void 0, void 0, function () {
-    var pedidos, gramos, id, pedido, pedidoSaver;
+    var pedidos, gramos, total, id, pedido, pedidoSaver, pedidos, gramos, id, pedido, pedidoSaver;
     return __generator(this, function (_a) {
-        if (_user.pedidos.length < 5) {
-            console.log("al ser una cuenta de empresa tienes que comprar un minimo de 5 productos");
-        }
-        if (_user.pedidos.length === 0) {
-            console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito');
+        if (_user.type == 'M') {
+            if (_user.pedidos.length <= 5) {
+                console.log('al ser una cuenta de empresa tienes que comprar un minimo de 5 productos');
+                if (_user.pedidos.length === 0) {
+                    console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito');
+                }
+                else {
+                    pedidos = _user.pedidos;
+                    gramos = _user.gramos;
+                    total = _user.verCarrito;
+                    id = _user._id;
+                    if (id !== undefined) {
+                        pedido = new pedidos_1.Pedidos(pedidos, gramos, id);
+                        pedidoSaver = new pedidos_1.pedidoModel(pedido);
+                        pedidoSaver.save();
+                        _user.changepedido = [];
+                    }
+                }
+            }
         }
         else {
-            pedidos = _user.pedidos;
-            gramos = _user.gramos;
-            id = _user._id;
-            if (id !== undefined) {
-                pedido = new pedidos_1.Pedidos(pedidos, gramos, id);
-                pedidoSaver = new pedidos_1.pedidoModel(pedido);
-                pedidoSaver.save();
-                _user.changepedido = [];
+            if (_user.pedidos.length === 0) {
+                console.log('No puedes finalizar la compra ya que no tienes ningun producto en el carrito');
+            }
+            else {
+                pedidos = _user.pedidos;
+                gramos = _user.gramos;
+                id = _user._id;
+                if (id !== undefined) {
+                    pedido = new pedidos_1.Pedidos(pedidos, gramos, id);
+                    pedidoSaver = new pedidos_1.pedidoModel(pedido);
+                    pedidoSaver.save();
+                    _user.changepedido = [];
+                }
             }
         }
         return [2 /*return*/];

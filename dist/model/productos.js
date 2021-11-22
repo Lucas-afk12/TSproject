@@ -53,9 +53,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.plantModel = exports.plantFunc = exports.Plantas = exports.Productos = void 0;
 var mongoose_1 = require("mongoose");
-var autoIncrement = require("mongoose-auto-increment");
-var connection = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-var connectio = (0, mongoose_1.createConnection)("mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+var autoIncrement = require('mongoose-auto-increment');
+var connection = (0, mongoose_1.createConnection)('mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
 //Productos
 var Productos = /** @class */ (function () {
     function Productos(Nombre, precio, thc, cbd, stock, cod_proveedor, Cosecha, type, id_p) {
@@ -118,7 +117,7 @@ var Productos = /** @class */ (function () {
                             resolve(query);
                         }
                         else {
-                            reject(console.log("no hay ningun producto"));
+                            reject(console.log('no hay ningun producto'));
                         }
                         return [2 /*return*/];
                 }
@@ -126,8 +125,16 @@ var Productos = /** @class */ (function () {
         }); });
         return promise;
     };
-    Productos.prototype.totalprice = function (grams) {
-        return this._precio * grams;
+    Productos.prototype.totalprice = function (grams, type) {
+        if (type == 'M') {
+            return this._precio * grams * 0.75;
+        }
+        else {
+            return this._precio * grams;
+        }
+    };
+    Productos.prototype.totalIva = function (gramos, type) {
+        return this.totalprice(gramos, type) * 1.21;
     };
     Object.defineProperty(Productos.prototype, "cosecha", {
         get: function () {
@@ -136,7 +143,9 @@ var Productos = /** @class */ (function () {
                 .toLocaleDateString('es', opciones)
                 .replace(/ /g, '-')
                 .replace('.', '')
-                .replace(/-([a-z])/, function (x) { return '-' + x[1].toUpperCase(); });
+                .replace(/-([a-z])/, function (x) {
+                return '-' + x[1].toUpperCase();
+            });
             return fecha;
         },
         enumerable: false,
@@ -179,23 +188,36 @@ var Plantas = /** @class */ (function (_super) {
     Plantas.prototype.mostrar = function () {
         console.log(this.id + ".-" + this.NombreProducto + " , precioG= " + this._precio + "\u20AC , stock= " + this._stock + " , genetica= " + this.tipo + " , " + this.Predominancia + " ,  Fecha = " + this.cosecha);
     };
-    Plantas.prototype.totalprice = function (gramos) {
-        if (this.Apta_para_extracto) {
-            return ((this._precio * gramos) * 1.25);
+    Plantas.prototype.totalprice = function (gramos, type) {
+        if (type == 'M') {
+            if (this.Apta_para_extracto) {
+                return this._precio * gramos * 1.25 * 0.75;
+            }
+            else {
+                return this._precio * gramos * 0.75;
+            }
         }
         else {
-            return this._precio * gramos;
+            if (this.Apta_para_extracto) {
+                return this._precio * gramos * 1.25;
+            }
+            else {
+                return this._precio * gramos;
+            }
         }
+    };
+    Plantas.prototype.totalIva = function (gramos, type) {
+        return this.totalprice(gramos, type) * 1.21;
     };
     return Plantas;
 }(Productos));
 exports.Plantas = Plantas;
 // Objeto vacio para ejecutar funciones.
 var genetica = {
-    tipo: "",
-    Predominancia: "",
+    tipo: '',
+    Predominancia: '',
 };
-exports.plantFunc = new Plantas("", 0, 0, "", false, 0, genetica, 0, false, new Date());
+exports.plantFunc = new Plantas('', 0, 0, '', false, 0, genetica, 0, false, new Date());
 //subclase de extracto
 var PlantaSchema = new mongoose_1.Schema({
     Nombre: { type: String },
@@ -216,6 +238,6 @@ var PlantaSchema = new mongoose_1.Schema({
 });
 //plugin
 autoIncrement.initialize(connection);
-PlantaSchema.plugin(autoIncrement.plugin, { model: "Plantas", field: "id_p" });
+PlantaSchema.plugin(autoIncrement.plugin, { model: 'Plantas', field: 'id_p' });
 //modelos
-exports.plantModel = connection.model("productos", PlantaSchema);
+exports.plantModel = connection.model('productos', PlantaSchema);

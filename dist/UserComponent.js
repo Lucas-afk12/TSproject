@@ -40,6 +40,7 @@ exports.userMenu = void 0;
 var clientes_1 = require("./model/clientes");
 var menu_1 = require("./vistas/menu");
 var lecturaTeclado_1 = require("./vistas/lecturaTeclado");
+var mayoristas_1 = require("./model/mayoristas");
 var index_1 = require("./index");
 var userMenu = function () { return __awaiter(void 0, void 0, void 0, function () {
     var n, _a;
@@ -181,7 +182,7 @@ var UserCreator = function (Errores) { return __awaiter(void 0, void 0, void 0, 
                 _b.label = 25;
             case 25:
                 _b.trys.push([25, 31, , 32]);
-                Mayoristas_1 = clientes_1.MayoristFunc.create(nombre, apellidos, dni, user, contraseña, pedidos, gramos, reciboChek, status_2, empresa);
+                Mayoristas_1 = mayoristas_1.MayoristFunc.create(nombre, apellidos, dni, user, contraseña, pedidos, gramos, reciboChek, status_2, empresa);
                 return [4 /*yield*/, Mayoristas_1.errorchecker()];
             case 26:
                 errors = _b.sent();
@@ -239,7 +240,7 @@ var userLogin = function (errors) { return __awaiter(void 0, void 0, void 0, fun
                     usuario = user_1;
                 }
                 else {
-                    user_2 = clientes_1.MayoristFunc.create(userQuery._nombre, userQuery._apellidos, userQuery._dni, userQuery._nombreUsuario, userQuery._Contraseña, userQuery._pedidos, userQuery._gramos, userQuery._recibo, userQuery._status, userQuery.numEmpresa, userQuery._id);
+                    user_2 = mayoristas_1.MayoristFunc.create(userQuery._nombre, userQuery._apellidos, userQuery._dni, userQuery._nombreUsuario, userQuery._Contraseña, userQuery._pedidos, userQuery._gramos, userQuery._recibo, userQuery._status, userQuery.numEmpresa, userQuery._id);
                     usuario = user_2;
                 }
                 if (!(usuario.Contraseña == contraseña)) return [3 /*break*/, 6];

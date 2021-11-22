@@ -11,11 +11,11 @@ const connection = createConnection(
 
 export class Cliente {
 	_id?: number;
-	private _nombre: string;
-	private _apellidos: String;
-	private _dni: String;
-	private _nombreUsuario: string;
-	private _Contraseña: string;
+	protected _nombre: string;
+	protected _apellidos: String;
+	protected _dni: String;
+	protected _nombreUsuario: string;
+	protected _Contraseña: string;
 	private _pedidos: Array<number> = [];
 	private _gramos: Array<number> = [];
 	private _recibo: Boolean;
@@ -82,6 +82,7 @@ export class Cliente {
 		let gramos: Array<number> = this.gramos;
 		let x = 0;
 		let total = 0;
+		let totalIva = 0;
 
 		if (pedidos.length !== 0) {
 			let gram = gramos.reduce((a, b) => a + b);
@@ -94,9 +95,10 @@ export class Cliente {
 					console.log(
 						`${x}.- ${gramos[x]} gramos de ${
 							temp.NombreProducto
-						} por un precio total de ${temp.totalprice(gramos[x])}€`
+						} por un precio total de ${temp.totalprice(gramos[x], this.type)}€`
 					);
-					total = temp.totalprice(gramos[x]) + total;
+					total = temp.totalprice(gramos[x],this.type) + total;
+					totalIva = temp.totalIva(gramos[x], this.type)
 				} else {
 					let temp: Extracto | undefined = extractos.find(
 						(extracto) => extracto.id == pedido
@@ -105,14 +107,16 @@ export class Cliente {
 						console.log(
 							`${x}.- ${gramos[x]} gramos de ${
 								temp.NombreProducto
-							} por un precio total de ${temp.totalprice(gramos[x])}€`
+							} por un precio total de ${temp.totalprice(gramos[x],this.type)}€`
 						);
-						total = temp.totalprice(gramos[x]) + total;
+						total = temp.totalprice(gramos[x],this.type) + total;
+						totalIva = temp.totalIva(gramos[x],this.type) + totalIva
 					}
 				}
 				x++;
 			}
 			console.log(`un total de ${gram} gramos por ${total}€`);
+			console.log(`iva_incluido:${totalIva}`)
 		} else {
 			console.log('el carrito esta vacio');
 			return false;
@@ -211,7 +215,6 @@ export class Cliente {
 		return promise;
 	}
 
-	comprar(_producto: number) {}
 }
 
 //inizializamos una variable para ejecutar las funciones de administracion de los clientes.
@@ -249,95 +252,6 @@ export const ClienteSchema = new Schema({
 	type: { type: String },
 });
 
-export class Mayoristas extends Cliente {
-	private numEmpresa: string;
-	type: string;
-
-	constructor(
-		_nombre: string,
-		_apellido: string,
-		_dni: string,
-		_nombreUsuario: string,
-		_Contraseña: string,
-		_pedidos: Array<number>,
-		_gramos: number[],
-		_recibo: boolean,
-		_status: boolean,
-		numEmpresa: string,
-		id?: number
-	) {
-		super(
-			_nombre,
-			_apellido,
-			_dni,
-			_nombreUsuario,
-			_Contraseña,
-			_pedidos,
-			_gramos,
-			_recibo,
-			_status,
-			id
-		);
-
-		this.numEmpresa = numEmpresa;
-		this.type = 'M';
-	}
-
-	create(
-		_nombre: string,
-		_apellido: string,
-		_dni: string,
-		_nombreUsuario: string,
-		_Contraseña: string,
-		_pedidos: number[],
-		_gramos: number[],
-		_recibo: boolean,
-		_status: boolean,
-		numEmpresa: string,
-		id?: number
-	) {
-		if (id == undefined) {
-			return new Mayoristas(
-				_nombre,
-				_apellido,
-				_dni,
-				_nombreUsuario,
-				_Contraseña,
-				_pedidos,
-				_gramos,
-				_recibo,
-				_status,
-				numEmpresa
-			);
-		}
-		return new Mayoristas(
-			_nombre,
-			_apellido,
-			_dni,
-			_nombreUsuario,
-			_Contraseña,
-			_pedidos,
-			_gramos,
-			_recibo,
-			_status,
-			numEmpresa,
-			id
-		);
-	}
-}
-
-export const MayoristFunc = new Mayoristas(
-	'',
-	'',
-	'',
-	'',
-	'',
-	[],
-	[],
-	false,
-	false,
-	''
-);
 ClienteSchema.plugin(autoIncrement.plugin, 'Cliente');
 export const clientModel: Cliente | any = connection.model<Cliente>(
 	'cliente',
