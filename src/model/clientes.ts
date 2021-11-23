@@ -1,5 +1,8 @@
 import { Schema, model, createConnection } from 'mongoose';
+import { Extracto } from './extractos';
+import { Plantas } from './productos';
 const autoIncrement = require('mongoose-auto-increment');
+
 const connection = createConnection(
 	'mongodb+srv://Lucas:Salmeron1@cluster0.athzv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 );
@@ -8,15 +11,16 @@ const connection = createConnection(
 
 export class Cliente {
 	_id?: number;
-	private _nombre: string;
-	private _apellidos: String;
-	private _dni: String;
-	private _nombreUsuario: string;
-	private _Contraseña: string;
-	private _pedidos: Array<Number> = [];
-	private _gramos: Array<Number> = [];
+	protected _nombre: string;
+	protected _apellidos: String;
+	protected _dni: String;
+	protected _nombreUsuario: string;
+	protected _Contraseña: string;
+	private _pedidos: Array<number> = [];
+	private _gramos: Array<number> = [];
 	private _recibo: Boolean;
 	private _status: Boolean;
+	type: string;
 
 	constructor(
 		_nombre: string,
@@ -24,8 +28,8 @@ export class Cliente {
 		_dni: string,
 		_nombreUsuario: string,
 		_Contraseña: string,
-		_pedidos: number[],
-		_gramos: Number[],
+		_pedidos: Array<number>,
+		_gramos: number[],
 		_recibo: boolean,
 		_status: boolean,
 		id?: number
@@ -40,6 +44,7 @@ export class Cliente {
 		this._gramos = _gramos;
 		this._recibo = _recibo;
 		this._status = _status;
+		this.type = 'C';
 	}
 
 	get Contraseña() {
@@ -50,8 +55,73 @@ export class Cliente {
 		return this._nombreUsuario;
 	}
 
+	get pedidos() {
+		return this._pedidos;
+	}
 
-	//funciones de datos. 
+	get gramos() {
+		return this._gramos;
+	}
+
+	set addpedido(data: number) {
+		this._pedidos.push(data);
+	}
+
+	set changepedido(data: Array<number>) {
+		this._pedidos = data;
+	}
+
+	set addgrams(data: number) {
+		this._gramos.push(data);
+	}
+
+	//funciones de datos.
+
+	verCarrito(plantas: Plantas[], extractos: Extracto[]) {
+		let pedidos: Array<number> = this.pedidos;
+		let gramos: Array<number> = this.gramos;
+		let x = 0;
+		let total = 0;
+		let totalIva = 0;
+
+		if (pedidos.length !== 0) {
+			let gram = gramos.reduce((a, b) => a + b);
+
+			for (let pedido of pedidos) {
+				let temp: Plantas | undefined = plantas.find(
+					(planta) => planta.id == pedido
+				);
+				if (temp !== undefined) {
+					console.log(
+						`${x}.- ${gramos[x]} gramos de ${
+							temp.NombreProducto
+						} por un precio total de ${temp.totalprice(gramos[x], this.type)}€`
+					);
+					total = temp.totalprice(gramos[x],this.type) + total;
+					totalIva = temp.totalIva(gramos[x], this.type)
+				} else {
+					let temp: Extracto | undefined = extractos.find(
+						(extracto) => extracto.id == pedido
+					);
+					if (temp !== undefined) {
+						console.log(
+							`${x}.- ${gramos[x]} gramos de ${
+								temp.NombreProducto
+							} por un precio total de ${temp.totalprice(gramos[x],this.type)}€`
+						);
+						total = temp.totalprice(gramos[x],this.type) + total;
+						totalIva = temp.totalIva(gramos[x],this.type) + totalIva
+					}
+				}
+				x++;
+			}
+			console.log(`un total de ${gram} gramos por ${total}€`);
+			console.log(`iva_incluido:${totalIva}`)
+		} else {
+			console.log('el carrito esta vacio');
+			return false;
+		}
+	}
 
 	//funciones tecnicas.
 	creator(
@@ -61,7 +131,7 @@ export class Cliente {
 		_nombreUsuario: string,
 		_Contraseña: string,
 		_pedidos: number[],
-		_gramos: Number[],
+		_gramos: number[],
 		_recibo: boolean,
 		_status: boolean,
 		id?: number
@@ -95,12 +165,14 @@ export class Cliente {
 
 	Exist(user?: string) {
 		const promise = new Promise<boolean>(async (resolve, reject) => {
-            let exist = "a" 
-            if (user!=undefined){
-			exist = await clientModel.findOne({ _nombreUsuario: user });
-            }else{
-            exist = await clientModel.findOne({ _nombreUsuario: this._nombreUsuario }); 
-            }
+			let exist = 'a';
+			if (user != undefined) {
+				exist = await clientModel.findOne({ _nombreUsuario: user });
+			} else {
+				exist = await clientModel.findOne({
+					_nombreUsuario: this._nombreUsuario,
+				});
+			}
 			if (exist != null) {
 				resolve(true);
 			} else {
@@ -110,7 +182,7 @@ export class Cliente {
 		return promise;
 	}
 
-	conected() {
+	async conected() {
 		const promise = new Promise<tCliente | boolean>(async (resolve, reject) => {
 			let conected = await clientModel.findOne({ _status: true });
 			if (conected != null) {
@@ -122,22 +194,27 @@ export class Cliente {
 		return promise;
 	}
 
-	errorchecker(){
-		let solution :Array<string> = [] 
-		let x = this._nombre
+	errorchecker() {
+		let solution: Array<string> = [];
+		let x = this._nombre;
 		const promise = new Promise<Array<string>>(async (resolve, reject) => {
-		if (
-			this._nombreUsuario || this._nombre == '' || this._apellidos == '' || this._dni == '' || this._Contraseña == ''
-			){
-			solution.push('No puedes dejar ningun elemento vacio');
-		}
-		if (await this.Exist()){
-			solution.push('Ese nombre de usuario ya existe')
-		}
-		resolve(solution)
-	})
-	return promise
+			if (
+				this._nombreUsuario == '' ||
+				this._nombre == '' ||
+				this._apellidos == '' ||
+				this._dni == '' ||
+				this._Contraseña == ''
+			) {
+				solution.push('No puedes dejar ningun elemento vacio');
+			}
+			if (await this.Exist()) {
+				solution.push('Ese nombre de usuario ya existe');
+			}
+			resolve(solution);
+		});
+		return promise;
 	}
+
 }
 
 //inizializamos una variable para ejecutar las funciones de administracion de los clientes.
@@ -150,7 +227,7 @@ export interface tCliente {
 	_apellidos: string;
 	_dni: string;
 	_nombreUsuario: string;
-	_Contraseña: string;	
+	_Contraseña: string;
 	_pedidos: number[];
 	_gramos: number[];
 	_recibo: boolean;
@@ -161,6 +238,7 @@ export interface tCliente {
 autoIncrement.initialize(connection);
 
 export const ClienteSchema = new Schema({
+	_id: { type: String },
 	_nombre: { type: String, unique: true },
 	_apellidos: { type: String },
 	_dni: { type: String },
@@ -168,11 +246,12 @@ export const ClienteSchema = new Schema({
 	_Contraseña: { type: String },
 	_pedidos: { type: Array },
 	_gramos: { type: Array },
+	numEmpresa: { type: String },
 	_recibo: { type: Boolean },
 	_status: { type: Boolean },
+	type: { type: String },
 });
 
-//Exportamos el esquema aplicando el plugin
 ClienteSchema.plugin(autoIncrement.plugin, 'Cliente');
 export const clientModel: Cliente | any = connection.model<Cliente>(
 	'cliente',
